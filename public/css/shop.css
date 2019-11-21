@@ -1,0 +1,294 @@
+body{
+    width: 100%;
+    height: 100%;
+    background-color: #323B43;
+    font-family: 'Kulim Park', sans-serif !important;
+}
+#nav{
+    width: 100%;
+    height: 80px;
+    background: #1D2329;
+}
+.logo,.depoziti,.coin-depoziti,.avatar{
+    display: inline-block;
+}
+.depoziti,.coin-depoziti,.avatar{
+    margin-left: 30px;
+}
+.avatar img,.avatar a,.depoziti p,.depoziti span,.coin-depoziti img,.coin-depoziti span{
+    display: inline-block;
+}
+.avatar a,.depoziti p,.depoziti span,.coin-depoziti span{
+    color: #ffffff;
+    font-weight: lighter;
+    font-size: 17px;
+}
+#coin-ammount,.depoziti p{
+    margin-left: 5px;
+    font-weight: bold;
+}
+.avatar{
+    padding-left: 50%;
+}
+.avatar a{
+    text-decoration: none;
+    position: relative;
+}
+.avatar{
+    left: 65%;
+}
+/* End Of Nav */
+#main-donate{
+    width: 100%;
+    height: 1000px;
+    background: #323B43;
+}
+
+.donate-grid { 
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 20px;
+    align-items: stretch;
+    padding-top: 100px;
+    padding-left: 155px;
+    }
+  .donate-grid > article {
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 6px 0px  rgba(0,0,0,0.3);
+  }
+  .donate-grid > article img {
+    max-width: 80%;
+    margin: 0 auto;
+    display: table;
+    margin-top: 20px;
+  }
+  .donate-grid > article{
+      background-color: #F0FFFF;
+  }
+  .text {
+    text-align: center;
+    padding-top: 20px;
+  }
+  .text h3{
+      color: #FFD949;
+      font-size: 50px;
+  }
+  .text p{
+      color: #1D2329;
+      font-size: 35px;
+      margin-top: 15px;
+  }
+  .text > button {
+    margin-top: 40px;
+    background: #1D2329;
+    border: 0;
+    color: #ffffff;
+    font-size: 35px;
+    padding: 10px;
+    width: 100%;
+    }
+    .text > button:hover{
+        background: #FFD949;
+    }
+    .coins-header h1{
+        color: #FFD949;
+        text-align: center;
+        padding-top: 5%;
+    }
+
+    ::-webkit-scrollbar {
+        width: 17px;
+        background: #1B1F25;
+        display: inline-block; 
+      }
+      
+      ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 5px #1B1F25; 
+      }
+       
+      ::-webkit-scrollbar-thumb {
+        background: #35404C; 
+      }
+
+@import url(https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic);
+
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,100italic,100,300,300italic,400italic,500,500italic,700,700italic,900,900italic);
+
+
+.card{
+  width:700px;
+  height:360px;
+  background:#FFF;
+  margin:0 auto;
+  margin-top:20px;
+}
+
+.top{
+  width:100%;
+  background:rgb(25, 146, 250);
+  padding:57px 0;
+  position:relative;
+}
+
+.payment{
+  position: absolute;
+  width: 30px;
+  font-size: 22px;
+  color: #FFF;
+  font-family: 'ubuntu', sans-serif;
+  text-transform: uppercase;
+  line-height: 25px;
+  font-weight: 500;
+  top:32px;
+  left:35px;
+}
+
+.visa svg{
+  width: 120px;
+  height: auto;
+  position: absolute;
+  right: 29px;
+  top: -195px;
+}
+
+
+/*form styles*/
+form{
+  width:550px;
+  margin:0 auto;
+
+}
+
+.one{
+  width:225px;
+}
+
+.two{
+  width:245px;
+}
+.one, .two, .three, .four, .five{
+  float:left;
+  margin:15px 40px 5px 0;
+}
+
+.three, .four, .five{
+  float:left;
+  width:143px;
+  
+}
+
+input, select{
+  clear:both;
+  float:none;
+  display:block;
+  -webkit-appearance: none;
+  border:1px solid rgb(197, 197, 197);
+  padding:14px 15px;
+  border-radius:3px;
+  width:100%;
+  font-size:15px;
+ color: #000;
+ text-align: left;
+ font-weight: bold;
+  background:#FFF;
+}
+
+input{
+  color: rgb(244, 195, 88);
+    text-shadow: 0px 0px 0px #000;
+    -webkit-text-fill-color: transparent;
+}
+
+select{
+  padding-left:15px;
+}
+
+::-webkit-input-placeholder {
+ font-size: 15px;
+ color: #000;
+ text-align: left;
+ font-weight: bold;
+  padding-left:0px;
+}
+:-moz-placeholder { /* older Firefox*/
+font-size: 15px;
+ color: #000;
+ text-align: left;
+ font-weight: bold;
+  padding-left:0px;
+}
+::-moz-placeholder { /* Firefox 19+ */ 
+font-size: 15px;
+ color: #000;
+ text-align: left;
+ font-weight: bold;
+  padding-left:0px;
+} 
+:-ms-input-placeholder { 
+ font-size: 15px;
+ color: #000;
+ text-align: left;
+ font-weight: bold;
+  padding-left:0px;
+}
+
+label{
+  color:rgb(151, 151, 151);
+  font-size:12px;
+  font-weight:500;
+  letter-spacing: -0px;
+  font-family:'ubuntu', sans-serif;
+  text-transform:uppercase;
+  margin:15px 0;
+  display:block;
+  width: 150px;
+}
+ 
+input[type=text]:focus,input[type=number]:focus, textarea:focus, select:focus {
+  box-shadow: none;
+  outline:none;
+  border: 1px solid rgb(25, 146, 250);
+}
+
+/*drop down arrow */
+/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    select {padding-right:18px}
+}
+
+label {position:relative}
+.three label:after, .four label:after {
+    content:"\f078";   
+    font-family: "FontAwesome";
+    font-size: 11px;
+    color:rgb(140, 140, 140);
+    right:10px; top:45px;
+    padding:0 0 2px;
+    position:absolute;
+    pointer-events:none;
+}
+label:before {
+    content:'';
+    right:4px; top:0px;
+    width:23px; height:18px;
+    background:#fff;
+    position:absolute;
+    pointer-events:none;
+    display:block;
+}
+@media only screen and (max-width: 1360px){
+    #main-donate{
+        height: 1300px;
+    }
+    .donate-grid { 
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        align-items: stretch;
+        padding-top: 100px;
+        padding-left: 50px;
+        padding-right: 50px;
+        }
+     .modal-dialog{
+         margin-left: 200px;
+     }
+}
+
