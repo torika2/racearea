@@ -53,11 +53,12 @@ class ChatController extends Controller
                     ->join('users','channels.userId','=','users.id')
                     ->where('users.id',$userId)->where('channels.id',$chanId)->get();
 
-                    $donator = Donator::where('chanId',$chanId)->get();
+                                $donator = Donator::select('amount')->where('chanId',$chanId)->sum('amount');
+                                $topDonator = Donator::join('users','users.id','=','donators.userId')->where('chanId',$chanId)->sum('amount');
         }
         // return response()->json($chat);
 
-            return view('anotherStream',compact('chat','chan','donator'));
+            return view('anotherStream',compact('chat','chan','donator','topDonator'));
 
     }
 }

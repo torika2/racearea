@@ -54,8 +54,9 @@
       {{-- chatend--}}
       <div>
           <p style="display:inline-block;">Viewers : <span id="stream-viewers" style="font-size: 20px"><code>{{$chans->view}}</code></span></p>
+            @if ($donator)
 		          	<p style="display:inline-block; margin-left: 2%;">Donated Coins:<span id="stream-subscribers" style="margin-left:2px;font-size: 20px"><code>{{$donator}}</code></span></p>
-
+            @endif
           <form id="chatForm" action="{{ route('goAnotherCoin') }}" method="POST">
           	{{ csrf_field() }}
           		<select  name="amount" >
@@ -88,23 +89,8 @@
                 <h4>ტოპ დონატორები</h4>
                 <hr>
                 <ul style="display: block;">
-                    <li>სახელი</li>
-                    <li>სახელი</li>
-                    <li>სახელი</li>
-                    <li>სახელი</li>
-                    <li>სახელი</li>
+                      <li>სახელი : {{$topDonator}}</li>
                 </ul>
-            </article>
-            <article>
-                <h4>ტოპ მოგებული</h4>
-                <hr>
-                <ul style="display: block;">
-                        <li>1000</li>
-                        <li>100</li>
-                        <li>10</li>
-                        <li>10</li>
-                        <li>10</li>
-                    </ul>
             </article>
           </div>
       </div>

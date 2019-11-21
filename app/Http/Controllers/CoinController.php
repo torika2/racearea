@@ -25,7 +25,7 @@ class CoinController extends Controller
    		$user->coin +=  $request->input('price')+$request->input('price')/9;
    		$user->save();
 
-         return view('coinPage');
+         return Redirect::to('/coinPage');
    }
    public function donate(Request $request)
    {
