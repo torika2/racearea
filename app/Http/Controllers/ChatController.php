@@ -54,9 +54,16 @@ class ChatController extends Controller
                     ->where('users.id',$userId)->where('channels.id',$chanId)->get();
 
                                 $donator = Donator::select('amount')->where('chanId',$chanId)->sum('amount');
-                                $topDonator = Donator::join('users','users.id','=','donators.userId')->where('chanId',$chanId)->sum('amount');
+                                $topDonator = Donator::select('donators.userId','donators.chanId','amount','name')->join('users','users.id','=','donators.userId')->where('chanId',$chanId)->groupBy('users.name')->orderBy('amount','DESC')->get();
+                                // print_r($topDonator);
+                                // exit();
+
         }
-        // return response()->json($chat);
+        // return response()->json([
+        //     'chat' => 'Success',
+        //     'donator' => 'Success Donator',
+        //     'topDonator' => 'Success TopDonator'
+        // ]);
 
             return view('anotherStream',compact('chat','chan','donator','topDonator'));
 

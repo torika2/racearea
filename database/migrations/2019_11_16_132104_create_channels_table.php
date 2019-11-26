@@ -20,6 +20,7 @@ class CreateChannelsTable extends Migration
             $table->integer('userId')->nullable(false);
             $table->string('choosen_game')->nullable(false);
             $table->string('about_stream')->nullable(false);
+            $table->integer('coins')->nullable()->default(0);
             $table->timestamps();
         });
     }

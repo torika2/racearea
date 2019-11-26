@@ -7,6 +7,10 @@
 @section('main')
 @foreach ($chan as $chans)
     @if ($chans->userId == \Auth::user()->id && \Auth::user()->streamer == 1)
+      @php
+            $donators =  App\Donator::select('amount')->where('chanId',$chans->id)->sum('amount');
+            App\Channel::where('userId',\Auth::user()->id)->update(['coins' => $donators]);
+      @endphp
       <div id="iframe" class="main-stream" style="width: 70%; height: 500px;display: inline-block;">
             <iframe
             src="https://player.twitch.tv/?channel={{$chans->twitchname}}&muted=true"
@@ -78,7 +82,7 @@ function addInfo() {
       {{-- chatend--}}
       <div>
           <p style="display:inline-block;">Viewers : <span id="stream-viewers" style="font-size: 20px"><code>{{$chans->view}}</code></span></p>
-          <p style="display:inline-block; margin-left: 2%;">Donated Coins: <span id="stream-subscribers" style="margin-left:2px;font-size: 20px"><code>0</code></span></p>
+          <p style="display:inline-block; margin-left: 2%;">Donated Coins: <span id="stream-subscribers" style="margin-left:2px;font-size: 20px"><code>{{$donators}}</code></span></p>
       </div>
       <div class="main-about">
           <div class="main-about-stream">
@@ -86,23 +90,10 @@ function addInfo() {
                 <h4>ტოპ დონატორები</h4>
                 <hr>
                 <ul style="display: block;">
-                    <li>სახელი</li>
-                    <li>სახელი</li>
-                    <li>სახელი</li>
-                    <li>სახელი</li>
-                    <li>სახელი</li>
+                  @foreach (App\Donator::select('donators.userId','donators.chanId','amount','name')->join('users','users.id','=','donators.userId')->where('chanId',$chans->id)->groupBy('users.name')->orderBy('amount','DESC')->get() as $topDonators)
+                    <li>{{$topDonators->name}}:{{$topDonators->amount}}</li>
+                  @endforeach
                 </ul>
-            </article>
-            <article>
-                <h4>ტოპ მოგებული</h4>
-                <hr>
-                <ul style="display: block;">
-                        <li>1000</li>
-                        <li>100</li>
-                        <li>10</li>
-                        <li>10</li>
-                        <li>10</li>
-                    </ul>
             </article>
           </div>
       </div>

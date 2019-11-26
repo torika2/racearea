@@ -29,7 +29,7 @@ class CoinController extends Controller
    }
    public function donate(Request $request)
    {
-      if (Auth::user()->coin >= $request->input('price')) {
+      if (Auth::user()->coin >= $request->input('amount')) {
          $this->validate($request,[
             'amount'  => 'required',
             'chanId' => 'required'
@@ -47,7 +47,9 @@ class CoinController extends Controller
             if ($donator && $userId && $userId && $coin) {
                User::where('id',$userId)->update(['coin'=>$coin]);
             }
+         return Redirect::to('/home');
+      }else{
+        return Redirect::to('/coinPage');
       }
-      return Redirect::to('/home');
    }
 }

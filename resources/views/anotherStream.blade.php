@@ -1,9 +1,9 @@
 @extends('layouts')
 @section('link')
 	<link rel="stylesheet" href="css/technostream.css">
-{{-- 	<meta name="_csrf" th:content="${_csrf.token}"/>
-	<meta name="_csrf_header" th:content="${_csrf.headerName}"/> --}}
+{{-- 	<meta name="_csrf" th:content="${_csrf.token}"/> --}}
   <meta charset="utf-8">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
 @section('main')
@@ -29,9 +29,9 @@
             @foreach ($chat as $chats)
 	            @if ($chats->chanId == $chans->chanId)
 		            @if ($chats->twitchname == $chans->twitchname)
-		            	<span class="chat-user-name" style="text-decoration: underline gold;">{{ $chats->twitchname }} :</span>
+		            	<span id="twitchname" class="chat-user-name" style="text-decoration: underline gold;">{{ $chats->twitchname }} :</span>
 		            @else
-	                    <span class="chat-user-name" >{{ $chats->twitchname }} :</span>
+	                    <span id="twitchname" class="chat-user-name" >{{ $chats->twitchname }} :</span>
 	                @endif
 	                    <br>
 	                <span id="chatOutput" class="chat-user-text">{{ $chats->content }}</span></p>
@@ -42,18 +42,50 @@
         <div class="chat-input">
             <form action="{{ route('anotherChat') }}" method="POST">
                 {{ csrf_field() }}
-                <input type="text" style="color:white;" name="content">
-                <input type="hidden" name="aUserId" value="{{ $chans->uId }}">
-                <input type="hidden" name="chanId" value="{{ $chans->chanId }}">
-                <button class="btn btn-primary" style="display: inline-block;height: 32px;font-size: 19px;">^</button>
+                <input id="content" type="text" style="color:white;" name="content">
+                <input id="aUserId" type="hidden" name="aUserId" value="{{ $chans->uId }}">
+                <input id="chanId" type="hidden" name="chanId" value="{{ $chans->chanId }}">
+                <button id="chatAdd" class="btn btn-primary" style="display: inline-block;height: 32px;font-size: 19px;">^</button>
             </form>
-            
+{{-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#chatAdd').click(function(){
+    var content = $('#content').val();
+    var chanId = $('#chanId').val();
+    var aUserId = $('#aUserId').val();
+        $.ajaxSetup({
+            headers:
+            { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        });
+        $.ajax({
+          type:'POST',
+          dataType: 'json',
+          url:'{{ route('anotherChat') }}',
+          data: {
+            content:content,
+            chanId:chanId,
+            aUserId:aUserId
+          },
+        }).done(function(response){
+          $('#twitchname').append('<span id="chatOutput" class="chat-user-text">'+{{$chats->twitchname}}+'</span>');
+            $('#chatOutput').append('<span id="chatOutput" class="chat-user-text">'+response.content+'</span>');
+           console.log('Ajax Successfull!!');
+        }).fail(function(){
+          console.log('notSuccessful');
+        });
+  });
+});
+</script> --}}
         </div>
       </div>
       </div>
       {{-- chatend--}}
       <div>
           <p style="display:inline-block;">Viewers : <span id="stream-viewers" style="font-size: 20px"><code>{{$chans->view}}</code></span></p>
+          @php
+                           App\Channel::where('id',$chans->chanId)->update(['coins' => $donator]);
+          @endphp 
             @if ($donator)
 		          	<p style="display:inline-block; margin-left: 2%;">Donated Coins:<span id="stream-subscribers" style="margin-left:2px;font-size: 20px"><code>{{$donator}}</code></span></p>
             @endif
@@ -73,15 +105,6 @@
                 <input type="hidden" name="chanId" value="{{ $chans->chanId }}">
           		<button class="btn btn-danger">Give Coins</button>
           </form>
-{{--           	<script type="text/javascript">
-          			$('#chatForm').on('submit', function(){
-          				e.preventDefault();
-          				var details = $('#chatForm').serialize();
-          				$.post('{{ route('goCoin') }}',details,function(){
-          					$('#chatOutput').html(data);
-          				});
-          			});
-          	</script> --}}
       </div>
       <div class="main-about">
           <div class="main-about-stream">
@@ -89,7 +112,12 @@
                 <h4>ტოპ დონატორები</h4>
                 <hr>
                 <ul style="display: block;">
-                      <li>სახელი : {{$topDonator}}</li>
+                  @foreach ($topDonator as $topDonators)
+                    @if ($chans->chanId == $topDonators->chanId)
+                      <li>{{$topDonators->name}} : {{$topDonators->amount}}</li>
+                    @endif  
+                  @endforeach 
+                  
                 </ul>
             </article>
           </div>
@@ -98,11 +126,5 @@
 
 @endsection
 @section('script')
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 @endsection

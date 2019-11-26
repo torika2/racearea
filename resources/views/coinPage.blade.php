@@ -20,7 +20,8 @@
                                     <div class="card-body">
                 <form method="POST" action="{{ route('goCoin') }}">
                         {{csrf_field()}}
-                    <input type="number" name="price" id="exampleModalLabel" value="">
+                    <input type="number" name="price" id="exampleModalLabel" value="" >
+                    <code id="exampleModalLabel"></code>
                     <button type="submit">buy</button>
                 </form>
                                     </div>

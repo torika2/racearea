@@ -9,6 +9,7 @@ use App\User;
 use App\Channel;
 use App\Subscriber;
 use App\Chat;
+use App\Donator;
 
 class HomeController extends Controller
 {
@@ -30,8 +31,8 @@ class HomeController extends Controller
     public function index()
     {
         $chan = Channel::join('users','channels.userId','=','users.id')->get();
-        $channel = Channel::join('users','channels.userId','=','users.id')->orderBy('channels.view','desc')->first();
-        $topStreams = Channel::join('users','channels.userId','=','users.id')->orderBy('channels.view','desc')->take(4)->get();
+        $channel = Channel::join('users','channels.userId','=','users.id')->orderBy('channels.coins','desc','channels.view','desc')->first();
+        $topStreams = Channel::join('users','channels.userId','=','users.id')->orderBy('coins','desc','view','desc')->take(4)->get();
 
         return view('home',compact('chan','channel','topStreams'));
     }
