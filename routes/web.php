@@ -26,4 +26,6 @@ Route::post('/anotherChan','ChatController@anotherCreate')->name('anotherChat');
 Route::post('/buyCoins','CoinController@buy')->name('goCoin');
 Route::post('/selectedStream','StreamController@view')->name('streamerGuy');
 Route::post('/donateCoin','CoinController@donate')->name('goAnotherCoin');
+Route::post('/commss','ChatController@recieve')->name('recieve');
+Route::post('/chatWith','ChatController@another')->name('another');
 

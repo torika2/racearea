@@ -39,7 +39,7 @@ class HomeController extends Controller
     public function Mystream(Request $request)
     {  
         $chan = Channel::all();
-        $chat = Chat::join('users','users.id','=','chats.userId')->get();
+        $chat = Chat::select('chats.chanId','chats.id AS cId','chats.userId','users.id as uId','users.name','chats.content')->join('users','users.id','=','chats.userId')->get();
 
         return view('myStream',compact('chan','chat'));
     }

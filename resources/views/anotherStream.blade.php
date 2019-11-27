@@ -1,7 +1,6 @@
 @extends('layouts')
 @section('link')
-	<link rel="stylesheet" href="css/technostream.css">
-{{-- 	<meta name="_csrf" th:content="${_csrf.token}"/> --}}
+	<link rel="stylesheet" href="{{ asset('css/technostream.css') }}">
   <meta charset="utf-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
@@ -23,7 +22,7 @@
       {{-- chat --}}
       <div class="main-chat">
         <div class="chat-output">
-            <div class="chat-message">
+            <div id="out" class="chat-message">
         <p>
 
             @foreach ($chat as $chats)
@@ -34,49 +33,76 @@
 	                    <span id="twitchname" class="chat-user-name" >{{ $chats->twitchname }} :</span>
 	                @endif
 	                    <br>
-	                <span id="chatOutput" class="chat-user-text">{{ $chats->content }}</span></p>
+	                <span id="chatOutput" data="{{ $chats->cId }}" class="chat-user-text">{{ $chats->content }}</span></p>
 	            @endif
             @endforeach
         </div>
         </div>
         <div class="chat-input">
-            <form action="{{ route('anotherChat') }}" method="POST">
-                {{ csrf_field() }}
-                <input id="content" type="text" style="color:white;" name="content">
+{{--             <form action="{{ route('anotherChat') }}" method="POST">
+                {{ csrf_field() }} --}}
+                <input onkeypress="process(event,this)" id="content" type="text" style="color:white;" name="content">
                 <input id="aUserId" type="hidden" name="aUserId" value="{{ $chans->uId }}">
                 <input id="chanId" type="hidden" name="chanId" value="{{ $chans->chanId }}">
                 <button id="chatAdd" class="btn btn-primary" style="display: inline-block;height: 32px;font-size: 19px;">^</button>
-            </form>
-{{-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+{{--             </form> --}}
+<script src="{{ asset('http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js') }}"></script>
 <script type="text/javascript">
-$(document).ready(function(){
-  $('#chatAdd').click(function(){
+
+function process(e){
+  var code = (e.KeyCode ? e.KeyCode : e.which);
+  if(code == 13){
+    giveComm();
+  }
+}
+
+function giveComm(){
     var content = $('#content').val();
     var chanId = $('#chanId').val();
     var aUserId = $('#aUserId').val();
-        $.ajaxSetup({
-            headers:
-            { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
-        });
         $.ajax({
           type:'POST',
-          dataType: 'json',
           url:'{{ route('anotherChat') }}',
           data: {
             content:content,
             chanId:chanId,
-            aUserId:aUserId
+            aUserId:aUserId,
+            _token:"{{ csrf_token() }}"
           },
-        }).done(function(response){
-          $('#twitchname').append('<span id="chatOutput" class="chat-user-text">'+{{$chats->twitchname}}+'</span>');
-            $('#chatOutput').append('<span id="chatOutput" class="chat-user-text">'+response.content+'</span>');
-           console.log('Ajax Successfull!!');
+          success:function() {
+            var content = $('#content').val("");
+          }
+        }).done(function(){
+           console.log('Ajax Input Successfull!!');
         }).fail(function(){
-          console.log('notSuccessful');
+          console.log('Input notSuccessful');
         });
-  });
-});
-</script> --}}
+}
+function takeComm(){
+    var chanId = $('#chanId').val();
+    var aUserId = $('#aUserId').val();
+    var aUserId = $('#aUserId').val();
+        $.ajax({
+          type:'POST',
+          url:'{{ route('another') }}',
+          data:{
+            _token:"{{csrf_token()}}",
+            chanId:chanId,
+            aUserId:aUserId,
+            dataId:$(".chat-user-text")[$(".chat-user-text").length-1].getAttribute("data")
+          },
+        }).done(function(data){
+          $('#out').append(data);
+           console.log('Ajax OutPut Successfull!!');
+        }).fail(function(){
+          console.log(' OutPut notSuccessful');
+        });
+}
+
+setInterval(function(){
+  takeComm();
+},2000);
+</script>
         </div>
       </div>
       </div>
@@ -126,5 +152,5 @@ $(document).ready(function(){
 
 @endsection
 @section('script')
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="{{ asset('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js') }}" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 @endsection
