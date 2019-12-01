@@ -1,6 +1,6 @@
 @extends('layouts')
 @section('link')
-    <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="{{ asset('css/shop.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <title>Shop</title>
@@ -20,23 +20,19 @@
                                     <div class="card-body">
                 <form method="POST" action="{{ route('goCoin') }}">
                         {{csrf_field()}}
-                    <input type="number" name="price" id="exampleModalLabel" value="" >
-                    <code id="exampleModalLabel"></code>
-                    <button type="submit">buy</button>
-                </form>
+                     <input style="font-size: 40px;color:gold;" type="number" name="price" id="exampleModalLabel" disabled>
+                    {{--  <button class="btn btn-primary">BUY COINS</button> --}}
                                     </div>
-                                  </div>
+                            </div>
                     </div>
-                     
                     <div class="modal-footer">
-                    	<button type="button" class="btn btn-success">ოპარაციის დასრულება</button>
-                    </form>
+                    	<button class="btn btn-success">ოპარაციის დასრულება</button>
+                </form>
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">დახურვა</button>
                     </div>
                   </div>
                 </div>
               </div>
-             
         <div class="coins-header">
 
                 <h1>
@@ -172,9 +168,7 @@
         });
       });
       </script>
-      <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 @endsection

@@ -17,6 +17,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::post('/myCoins','CoinController@layoutCoin')->name('layoutCoin');
+
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/myStream','HomeController@Mystream')->name('mS');
 Route::get('/coinPage','HomeController@buy')->name('coinBuy');
@@ -28,4 +30,7 @@ Route::post('/selectedStream','StreamController@view')->name('streamerGuy');
 Route::post('/donateCoin','CoinController@donate')->name('goAnotherCoin');
 Route::post('/commss','ChatController@recieve')->name('recieve');
 Route::post('/chatWith','ChatController@another')->name('another');
+
+Route::post('/donateCoinTo','CoinController@anotherCoinPage')->name('anotherCoinPage');
+Route::post('/anotherTopDonator','StreamController@anotherDonator')->name('anotherDonator');
 

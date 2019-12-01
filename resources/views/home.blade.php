@@ -11,19 +11,24 @@
 
 
 @section('main')
+@if (!empty($channel))
         <div class="popular-stream">
                 <iframe
-                src="https://player.twitch.tv/?channel={{$channel->twitchname}}&muted=true"
+                src="https://player.twitch.tv/?channel=
+   {{$channel->twitchname}}
+             &muted=true"
                 height="100%"
                 width="100%"
                 frameborder="0"
                 scrolling="no"
                 allowfullscreen="true">
             </iframe>
+@endif
         </div>
         <hr>
         <h3 style="text-align: center;">ტოპ სტრიმები</h3>
         <div class="stream-grid">
+            @if (!empty($topStreams) && !empty($channel))
              @foreach ($topStreams as $topStream)
                 @if ($topStream->userId != $channel->userId)
                     <article>
@@ -40,6 +45,7 @@
                     </article>
                 @endif
             @endforeach
+            @endif
             </div>
   <hr>
 

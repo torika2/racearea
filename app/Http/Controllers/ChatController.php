@@ -17,13 +17,13 @@ class ChatController extends Controller
     public function another(Request $request)
     {
             $this->validate($request,[
-                'chanId' => 'required|integer',
-                'dataId' => 'required|integer'
+                'chanId' => 'required|integer'
+                // 'dataId' => 'required|integer'
             ]);
+            $chat = Chat::select('chanId','chats.id as id','chats.userId','content','twitchname')->join('channels','channels.userId','=','chats.userId')->where('chats.chanId',$request->chanId)->get(); 
 
             $chan = Channel::all();
-            $chat = Chat::select('chats.chanId','chats.id AS chatId','chats.userId','users.id as uId','users.name','chats.content')->join('users','users.id','=','chats.userId')->where('chats.chanId',$request->input('chanId'))->where('chats.id','>',$request->input('dataId'))->get(); 
-
+// return $chat;
            return view('another',compact('chat','chan'));
     }
     public function recieve(Request $request)
@@ -35,6 +35,7 @@ class ChatController extends Controller
 
         $chat = Chat::select('chats.chanId','chats.id AS cId','chats.userId','users.id as uId','users.name','chats.content')->join('users','users.id','=','chats.userId')->where('chats.id','>',$request->input('lastMsg'))->get();
         $chan = Channel::all();
+
         return view('calke',compact('chat','chan'));
 
     }

@@ -30,11 +30,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $chan = Channel::join('users','channels.userId','=','users.id')->get();
-        $channel = Channel::join('users','channels.userId','=','users.id')->orderBy('channels.coins','desc','channels.view','desc')->first();
-        $topStreams = Channel::join('users','channels.userId','=','users.id')->orderBy('coins','desc','view','desc')->take(4)->get();
-
-        return view('home',compact('chan','channel','topStreams'));
+            $chan = Channel::join('users','channels.userId','=','users.id')->get();
+            $channel = Channel::join('users','channels.userId','=','users.id')->orderBy('channels.coins','desc','channels.view','desc')->first();
+            $topStreams = Channel::join('users','channels.userId','=','users.id')->orderBy('coins','desc','view','desc')->take(4)->get();
+                if ($channel != NULL && $topStreams != NULL) {
+                    return view('home',compact('chan','channel','topStreams'));
+                }else{
+                    return view('home',compact('chan'));
+                }      
     }
     public function Mystream(Request $request)
     {  
@@ -45,7 +48,6 @@ class HomeController extends Controller
     }
     public function buy()
     {
-
-        return view('coinPage');
+      return view('coinPage');
     }
 }

@@ -1,5 +1,6 @@
 @extends('layouts')
 @section('link')
+<link href="{{ asset('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN') }} " crossorigin="anonymous">
 	<link rel="stylesheet" href="css/technostream.css">
     <meta name="_csrf" th:content="${_csrf.token}"/>
 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
@@ -25,7 +26,7 @@
       <div class="main-chat">
         <div class="chat-output">
             <div id="comments" class="chat-message">
-        <p>
+        
             @foreach ($chat as $chats)
                 @if ($chats->chanId == $chans->id)
                     @if ($chats->userId == \Auth::user()->id)
@@ -36,7 +37,7 @@
                          <span class="chat-user-name" >{{ $chats->name }}</span>
                     @endif
                         <br>
-                    <span id="chatOutput" data="{{$chats->cId}}" class="chat-user-text">{{ $chats->content }}</span></p>
+                    <p><span id="chatOutput" data="{{$chats->cId}}" class="chat-user-text">{{ $chats->content }}</span></p>
                 @endif
             @endforeach
         </div>
@@ -49,7 +50,7 @@
                 @if ($chans->userId == \Auth::user()->id)
                     <input type="hidden" name="myId" value="{{ $chans->userId }}">
                 @endif
-                <button id="button" type="submit" class="btn btn-primary" style="display: inline-block;"></button>
+                <button id="button"  type="submit" class="btn btn-primary" style="display: inline-block;"></button>
 {{--             </form> --}}
 
 <script type="text/javascript">
@@ -67,19 +68,17 @@ function addInfo() {
                  myId:myId
               },
                success:function(data) {
-                   $("#chatOutput").html(data.content);
                    var content = $('#content').val("");
+                   // console.log('Ajax Successfull!!!');
                }
-            }).done(function(){
-                console.log('Ajax Successfull!!!');
             }).fail(function(){
                 console.log('NO AJAX!');
             });
 }
 function process(e){
   var code = (e.KeyCode ? e.KeyCode : e.which);
-  if(code == 13){
-    addInfo();
+  if(code == 13 || $('#button').click(function)){
+   addInfo();
   }
 }
 
@@ -104,7 +103,7 @@ function process(e){
 
 
   setInterval(function(){
-    recieveComm();},2000);
+    recieveComm();},500);
 
 </script>
         </div>
@@ -150,6 +149,7 @@ function process(e){
                 <option value="CS:GO">CS:GO</option>
                 <option value="Dota">Dota</option>
                 <option value="World of warcraft">World of warcraft</option>
+                <option>Another Game</option>
             </select>
             </div>
             <div class="form-group">

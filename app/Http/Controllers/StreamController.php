@@ -39,7 +39,7 @@ class StreamController extends Controller
     {
 
             $this->validate($request, [
-                'userId' => 'required'
+                'userId' => 'required|integer'
             ]);
             $userId = $request->input('userId');
                                 $chat = Chat::select('channels.twitchname','chanId','chats.id AS cId','chats.content')->join('users','users.id','=','chats.userId')
@@ -49,20 +49,18 @@ class StreamController extends Controller
             $chan = Channel::select('channels.view','users.coin','channels.twitchname','channels.id AS chanId','users.id AS uId')->join('users','channels.userId','=','users.id')->where('users.id',$userId)->get();
             $chanId = $request->input('chanId');
             $donator = Donator::select('amount')->where('chanId',$chanId)->sum('amount');
-             $topDonator = Donator::select('donators.userId','donators.chanId','amount','name')->join('users','users.id','=','donators.userId')->where('chanId',$chanId)->groupBy('users.name')->orderBy('amount','DESC')->get();
-        // }else{
-        //     $this->validate($request, [
-        //         'chanId' => 'required'
-        //     ]);
-        //     $userId = $request->input('chanId');
-        //                         $chat = Chat::select('channels.twitchname','channels.id AS chanId','chats.id AS chatId','chats.content')->join('users','users.id','=','chats.userId')
-        //             ->join('channels','users.id','=','channels.userId')
-        //             ->get();
-        //     $chan = Channel::select('channels.view','users.coin','channels.twitchname','channels.id AS chanId','users.id AS uId')->join('users','channels.userId','=','users.id')->where('channels.id',$userId)->get();
-        //     $chanId = $request->input('chanId');
-        //     $donator = Donator::select('amount')->where('chanId',$chanId)->sum('amount');
-        //      $topDonator = Donator::select('donators.userId','donators.chanId','amount','name')->join('users','users.id','=','donators.userId')->where('chanId',$chanId)->groupBy('users.name')->orderBy('amount','DESC')->get();
-        // }
+             $topDonator = User::distinct()->select('name','chanId')->selectRaw('sum(amount) as total')->join('donators','donators.userId','=','users.id')->where('chanId',$chanId)->groupBy('users.id')->orderBy('total','DESC')->get();
         return view('anotherStream',compact('chan','chat','donator','topDonator'));
+    }
+    public function anotherDonator(Request $request)
+    {
+        $this->validate($request,[
+            'chanId'=>'required|integer'
+        ]);
+
+        // $topDonator = Donator::selectRaw('distinct(channels.twitchname)','sum(amount) AS total')->where('chanId',$request->input('chanId'))->join('channels','channels.id','=','donators.chanId')->groupBy('chanId')->orderBy('userId','DESC')->get();
+        $topDonator = User::distinct()->select('users.name','users.id as userId','chanId')->selectRaw('sum(amount) as total')->join('donators','donators.userId','=','users.id')->where('chanId',$request->input('chanId'))->groupBy('users.id')->orderBy('total','DESC')->get();
+
+       return view('anotherTopDonator',compact('topDonator'));
     }
 }

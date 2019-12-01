@@ -14,10 +14,18 @@ class CoinController extends Controller
    {
         $this->middleware('auth');
    }
+
+   public function layoutCoin(Request $request)
+   {
+      $coin = User::select('coin')->where('id',Auth::user()->id)->get();
+
+      return view('myCoinView',compact('coin'));
+   }
+
    public function buy(Request $request)
    {  
    		$this->validate($request,[
-   			'price' =>'required'
+   			'price' =>'required|integer'
    		]);
    		$myId = Auth::user()->id;
    		$coin = User::select('coin')->where('id',$myId)->get();
@@ -25,14 +33,15 @@ class CoinController extends Controller
    		$user->coin +=  $request->input('price')+$request->input('price')/9;
    		$user->save();
 
-         return Redirect::to('/coinPage');
+            return route('coinBuy');
    }
+
    public function donate(Request $request)
    {
       if (Auth::user()->coin >= $request->input('amount')) {
          $this->validate($request,[
-            'amount'  => 'required',
-            'chanId' => 'required'
+            'amount'  => 'required|integer',
+            'chanId' => 'required|integer'
          ]);
 
          $donator = new Donator;
@@ -47,9 +56,21 @@ class CoinController extends Controller
             if ($donator && $userId && $userId && $coin) {
                User::where('id',$userId)->update(['coin'=>$coin]);
             }
-         return Redirect::to('/home');
+         return route('home');
       }else{
-        return Redirect::to('/coinPage');
+        return route('coinBuy');
       }
    }
+
+   public function anotherCoinPage(Request $request)
+   {
+      $this->validate($request,[
+         'chanId' => 'required|integer'
+      ]);
+
+      $channelDonatedCoins = Donator::selectRaw('sum(amount) AS total')->where('chanId',$request->input('chanId'))->groupBy('chanId')->get();
+
+      return view('coinAnotherPage',compact('channelDonatedCoins'));
+   }
+
 }
