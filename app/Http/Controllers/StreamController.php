@@ -17,21 +17,22 @@ class StreamController extends Controller
 	}
     public function create(Request $request)
     {
-    	$this->validate($request,[
-    		'twitchName' => 'required',
-    		'gameName' => 'required',
-    		'desc' => 'required'
-    	]);
+            	$this->validate($request,[
+            		'twitchName' => 'required|unique:channels',
+            		'gameName' => 'required',
+            		'desc' => 'required'
+            	]);
 
-    	$ch = new Channel;
-    	$ch->userId = Auth::user()->id;
-    	$ch->choosen_game = $request->input('gameName');
-    	$ch->twitchname = $request->input('twitchName');
-    	$ch->about_stream = $request->input('desc');
-    	$ch->save();
-        
-    	$id = Auth::user()->id;
-		User::where('id',$id)->update(['streamer' => 1]);
+            	$ch = new Channel;
+            	$ch->userId = Auth::user()->id;
+            	$ch->choosen_game = $request->input('gameName');
+            	$ch->twitchname = $request->input('twitchName');
+            	$ch->about_stream = $request->input('desc');
+            	$ch->save();
+                
+            	$id = Auth::user()->id;
+        		User::where('id',$id)->update(['streamer' => 1]);
+                return \Redirect::to('/myStream');
 
     	return \Redirect::to('/myStream');
     }

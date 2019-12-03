@@ -7,7 +7,22 @@
 @endsection
 
 @section('main')
-
+<style type="text/css">
+  .selectDonator{
+    background: transparent;
+    border-top-style:none;
+    border-left-style:none;
+    border-right-style:none;
+    border-bottom-style:solid;
+    color:gold;
+    font-size: 20px;
+    margin-left: 31%;
+  }
+  .selectDonator option{
+    background: black;
+    border-bottom: solid;
+  }
+</style>
 
 @foreach ($chan as $chans)
       <div id="iframe" class="main-stream" style="width: 70%; height: 500px;display: inline-block;">
@@ -40,10 +55,18 @@
         <div class="chat-input">
 {{--             <form action="{{ route('anotherChat') }}" method="POST">
                 {{ csrf_field() }} --}}
-                <input onkeypress="process(event,this)" id="content" type="text" style="color:white;" name="content">
-                <input id="aUserId" type="hidden" name="aUserId" value="{{ $chans->uId }}">
-                <input id="chanId" type="hidden" name="chanId" value="{{ $chans->chanId }}">
-              <button id="chatAdd" class="btn btn-primary" style="display: inline-block;height: 32px;font-size: 19px;"></button>
+                @if (\Auth::user()->streamer == 0)
+                  <input onkeypress="process(event,this)" id="content" type="text" style="color:white;" name="content" disabled>
+                  <input id="aUserId" type="hidden" name="aUserId" value="{{ $chans->uId }}">
+                  <input id="chanId" type="hidden" name="chanId" value="{{ $chans->chanId }}">
+                  <button id="chatAdd" class="btn btn-primary" style="display: inline-block;height: 32px;font-size: 19px;" disabled></button>
+                @else
+                  <input onkeypress="process(event,this)" id="content" type="text" style="color:white;" name="content">
+                  <input id="aUserId" type="hidden" name="aUserId" value="{{ $chans->uId }}">
+                  <input id="chanId" type="hidden" name="chanId" value="{{ $chans->chanId }}">
+                  <button id="chatAdd" class="btn btn-primary" style="display: inline-block;height: 32px;font-size: 19px;"></button>
+                @endif
+
 {{--             </form> --}}
 <script src="{{ asset('http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js') }}">
   
@@ -73,7 +96,6 @@ function giveComm(){
           },
           success:function() {
             var content = $('#content').val("");
-            // console.log('Ajax Input Successfull!!');
           }
         }).fail(function(){
           console.log('Input notSuccessful');
@@ -90,15 +112,16 @@ function takeComm(){
           },
           success:function(data){
             $('#comments').html(data);
-           // console.log('Ajax OutPut Successfull!!');
           }
         }).fail(function(){
           console.log(' OutPut notSuccessful');
         });
 }
-setInterval(function(){
-  takeComm();
-},2000);
+$(document).ready(function(){
+  setInterval(function(){
+    takeComm();
+  },2000);
+});
 
 </script>
         </div>
@@ -118,19 +141,25 @@ setInterval(function(){
           @endif
 {{--           <form id="chatForm" action="{{ route('goAnotherCoin') }}" method="POST">
           	{{ csrf_field() }} --}}
-          		<select  name="amount" id="selectedCoin">
-          			<option value="5">5</option>
+          		<select  name="amount" class="selectDonator" id="selectedCoin">
           			<option value="10">10</option>
-          			<option value="20">20</option>
-          			<option value="25">25</option>
           			<option value="50">50</option>
           			<option value="100">100</option>
-          			<option value="125">125</option>
+          			<option value="250">250</option>
+          			<option value="500">500</option>
+          			<option value="1000">1000</option>
           		</select>
                 <input type="hidden" id="coinChanId" name="chanId" value="{{ $chans->chanId }}">
           		<button id="coinButton" class="btn btn-danger">Give Coins</button>
        {{--    </form> --}}
-
+@if ($errors->any())
+  <div class="alert alert-danger">
+      @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+      @endforeach
+  </div>
+@endif
+<script type="text/javascript" src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
 <script type="text/javascript">
 $('#coinButton').on('click',function(){
   var chanId = $('#coinChanId').val();
@@ -145,7 +174,6 @@ $('#coinButton').on('click',function(){
           },
           success:function(){
             $('#selectedCoin').val('');
-            console.log('AJAX COIN +')
           }
         }).fail(function(){
           console.log('NO!! AJAX COIN');
@@ -168,9 +196,11 @@ function test(){
           console.log(' OutPut notSuccessful');
         });
 }
-setInterval(function(){
-  test();
-},2000);
+$(document).ready(function(){
+  setInterval(function(){
+    test();
+  },2000);
+});
 </script>
 
       </div>
@@ -199,15 +229,16 @@ function takeTopDonator(){
     },
     success:function(data){
       $('#topDonatorOutput').html(data);
-      // console.log('ajax +');
     }
   }).fail(function(){
     console.log('ajax failed');
   });
 }
-setInterval(function(){
-  takeTopDonator();
-},2000);
+$(document).ready(function(){
+  setInterval(function(){
+    takeTopDonator();
+  },2000);
+});
 </script>
 @endforeach
 

@@ -25,7 +25,7 @@ class CoinController extends Controller
    public function buy(Request $request)
    {  
    		$this->validate($request,[
-   			'price' =>'required|integer'
+   			'price' =>'required|integer|min:5|max:125'
    		]);
    		$myId = Auth::user()->id;
    		$coin = User::select('coin')->where('id',$myId)->get();

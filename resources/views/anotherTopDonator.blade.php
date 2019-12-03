@@ -18,3 +18,4 @@
 		<li> {{$topDonators->name}} : {{$topDonators->total}}</li>
 	@endif
 @endforeach
+<script type="text/javascript" src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>

@@ -21,7 +21,67 @@
         .ahrefCoin img:hover{
             opacity: 0.8   ;
         }
+        .loader,
+.loader:before,
+.loader:after {
+  background: #ffffff;
+  -webkit-animation: load1 1s infinite ease-in-out;
+  animation: load1 1s infinite ease-in-out;
+  width: 1em;
+  height: 4em;
+}
+.loader {
+  color: #ffffff;
+  text-indent: -9999em;
+  margin: 88px auto;
+  position: relative;
+  font-size: 11px;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+.loader:before,
+.loader:after {
+  position: absolute;
+  top: 0;
+  content: '';
+}
+.loader:before {
+  left: -1.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.loader:after {
+  left: 1.5em;
+}
+@-webkit-keyframes load1 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 0;
+    height: 4em;
+  }
+  40% {
+    box-shadow: 0 -2em;
+    height: 5em;
+  }
+}
+@keyframes load1 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 0;
+    height: 4em;
+  }
+  40% {
+    box-shadow: 0 -2em;
+    height: 5em;
+  }
+}
     </style>
+
         <div class="sidebar">
 
                 <h4>ტოპ 5 არხები</h4>
@@ -34,7 +94,7 @@
                         <input type="hidden" name="chanId" value="{{$popularUsers->chanId}}">
                         <button style="background: #1d2329;border:none;">
                             <li style="display: block;">
-                                <img src="Images/man.png" alt="avatar" width="30" height="30" style="display: inline-block;">
+                                <img src="{{ asset('Images/man.png') }}" alt="avatar" width="30" height="30" style="display: inline-block;">
                                 <p style="display: inline-block;">
                                     {{ $popularUsers->twitchname }}<code style="font-size:20px;">&trade;</code>
 
@@ -100,7 +160,7 @@
 
         <div class="saxeli-gvari" style="display: inline-block;">
            <a href="{{ route('mS') }}">
-                <img style="display: inline-block;" class="rounded-circle" src="Images/man.png" alt="saxeli-gvari" width="42" height="42">
+                <img style="display: inline-block;" class="rounded-circle" src="{{ asset('Images/man.png') }}" alt="saxeli-gvari" width="42" height="42">
                 <p style="display: inline-block;"><a href="#">{{\Auth::user()->name}}</a></p>
             </a>
         </div>
@@ -110,40 +170,51 @@
                 <button class="btn btn-danger">Logout</button>
             </form>
         </div>
-
 </nav>
     {{-- menu --}}
-
+    <input type="hidden" id="myid" name="myId" value="{{ \Auth::user()->id }}">
     {{-- menuend --}}
     <main id="main">
+        <div class="loader"></div>
         @yield('main')
     </main>
     </body>
-<script type="text/javascript" src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
-<script src="{{ asset('http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
 <script type="text/javascript">
+$(window).on('load', function(){
+  setTimeout(removeLoader,2000); //wait for page load PLUS two seconds.
+});
+function removeLoader(){
+    $( ".loader" ).fadeOut(500, function() {
+      // fadeOut complete. Remove the loading div
+      $( ".loader" ).remove(); //makes page more lightweight 
+  });  
+}
 function myCoins() {
+    var myid = $('#myid').val(); 
     $.ajax({
         type:'POST',
         url:'{{ route('layoutCoin') }}',
         data:{
-            _token:"{{csrf_token()}}",
-        },
+            _token:"{{csrf_token()}}"
+        }, 
         success:function(data){
             $('#myCoinOutput').html(data);
-            // console.log('AJAX +');
-        }
+        },
     }).fail(function(){
-        console.log('ajax mycoin failed');
+        console.log('Ajax mycoin failed!');
     });
 }
-setInterval(function(){
-    myCoins();
-},2000);
-</script>
 
+    setInterval(function(){
+        myCoins();
+    },2000);
+setInterval(function(){
+    console.clear();
+},5000);
+</script>
+<script type="text/javascript"></script>
+<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
     @yield('script')
-{{-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script> --}}
-<script src="{{ asset('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js') }}" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </html>
