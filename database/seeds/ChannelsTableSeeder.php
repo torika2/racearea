@@ -12,5 +12,20 @@ class ChannelsTableSeeder extends Seeder
      */
     public function run()
     {
+        $channel = new Channel;
+        $channel->twitchname = 'torika14';
+        $channel->userId = 1;
+        $channel->choosen_game = 'CS:GO';
+        $channel->about_stream = 'test1';
+        $channel->coins = 0;
+        $channel->save();
+
+        $channel = new Channel;
+        $channel->twitchname = 'shadowssssssssssssssss';
+        $channel->userId = 2;
+        $channel->choosen_game = 'Fortnite';
+        $channel->about_stream = 'test2';
+        $channel->coins = 0;
+        $channel->save();
     }
 }
