@@ -27,7 +27,7 @@ nav{
     background: #1d2329;
     position: fixed;
 }
-.sidebat ul li,h4,p{
+h3,p,.sidebar h4,p,ul li{
     color: #ffffff;
 }
 .sidebar ul li {

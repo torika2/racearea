@@ -1,7 +1,7 @@
 @extends('layouts')
 @section('link')
 <link href="{{ asset('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN') }} " crossorigin="anonymous">
-	<link rel="stylesheet" href="{{ asset('css/technostream.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{asset('css/technostream.css')}}">
   <meta charset="utf-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
@@ -39,17 +39,7 @@
       <div class="main-chat">
         <div class="chat-output">
             <div id="comments" class="chat-message">
-            {{-- @foreach ($chat as $chats)
-              @if ($chats->chanId == $chans->chanId)
-                @if ($chats->twitchname == $chans->twitchname)
-                  <span id="twitchname" class="chat-user-name" style="text-decoration: underline gold;">{{ $chats->twitchname }} :</span>
-                @else
-                      <span id="twitchname" class="chat-user-name" >{{ $chats->twitchname }} :</span>
-                  @endif
-                      <br>
-                  <p><span id="chatOutput" data="{{ $chats->cId }}" class="chat-user-text">{{ $chats->content }}</span></p>
-              @endif
-            @endforeach --}}
+                <!-- CHAT OUTPUT HERE! -->
         </div>
         </div>
         <div class="chat-input">
@@ -68,9 +58,7 @@
                 @endif
 
 {{--             </form> --}}
-<script src="{{ asset('http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js') }}">
-  
-</script>
+
 <script type="text/javascript">
 
 
@@ -117,11 +105,10 @@ function takeComm(){
           console.log(' OutPut notSuccessful');
         });
 }
-$(document).ready(function(){
+
   setInterval(function(){
     takeComm();
   },2000);
-});
 
 </script>
         </div>
@@ -136,7 +123,7 @@ $(document).ready(function(){
 
           @if ($donator)
             <span id="outputCoin">
-		          	<p  style="display:inline-block; margin-left: 2%;">Donated Coins:<span id="stream-subscribers" style="margin-left:2px;font-size: 20px"><code>{{$donator}}</code></span></p>
+		          	<!--<p  style="display:inline-block; margin-left: 2%;">Donated Coins:<span id="stream-subscribers" style="margin-left:2px;font-size: 20px"><code>{{$donator}}</code></span></p>-->
             </span>
           @endif
 {{--           <form id="chatForm" action="{{ route('goAnotherCoin') }}" method="POST">
@@ -159,11 +146,18 @@ $(document).ready(function(){
       @endforeach
   </div>
 @endif
-<script type="text/javascript" src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+<script type="text/javascript" src="{{asset('js/jquery-3.4.1.min.js')}}"></script>
 <script type="text/javascript">
+
 $('#coinButton').on('click',function(){
   var chanId = $('#coinChanId').val();
   var amount = $('#selectedCoin').val();
+        if(amount > {{ \Auth::user()->coin }}){
+            alert('You have not enought coin!');
+        }
+        if(amount < 10){
+            alert('Select coin value!');
+        }
         $.ajax({
           type:'POST',
           url:'{{ route('goAnotherCoin') }}',
@@ -176,11 +170,11 @@ $('#coinButton').on('click',function(){
             $('#selectedCoin').val('');
           }
         }).fail(function(){
-          console.log('NO!! AJAX COIN');
+          //console.log('NO!! AJAX COIN');
         });
 });
 
-function test(){
+function channelCoinAmount(){
     var chanId = $('#coinChanId').val();
         $.ajax({
           type:'POST',
@@ -196,11 +190,11 @@ function test(){
           console.log(' OutPut notSuccessful');
         });
 }
-$(document).ready(function(){
+
   setInterval(function(){
-    test();
+    channelCoinAmount();
   },2000);
-});
+
 </script>
 
       </div>
@@ -234,15 +228,15 @@ function takeTopDonator(){
     console.log('ajax failed');
   });
 }
-$(document).ready(function(){
+
   setInterval(function(){
     takeTopDonator();
-  },2000);
-});
+  },3000);
+
 </script>
 @endforeach
 
 @endsection
 @section('script')
-<script src="{{ asset('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js') }}" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="{{asset('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js')}}" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 @endsection

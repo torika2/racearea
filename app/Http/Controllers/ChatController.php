@@ -20,7 +20,7 @@ class ChatController extends Controller
                 'chanId' => 'required|integer'
                 // 'dataId' => 'required|integer'
             ]);
-            $chat = Chat::select('chanId','chats.id as id','chats.userId','content','twitchname')->join('channels','channels.userId','=','chats.userId')->where('chats.chanId',$request->chanId)->get(); 
+            $chat = Chat::select('chanId','chats.id as id','chats.userId','content','twitchname')->join('channels','channels.userId','=','chats.userId')->where('chats.chanId',$request->chanId)->orderBy('chats.id','desc')->get(); 
 
             $chan = Channel::all();
 // return $chat;

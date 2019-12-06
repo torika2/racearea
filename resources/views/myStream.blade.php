@@ -1,7 +1,7 @@
 @extends('layouts')
 @section('link')
 <link href="{{ asset('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN') }} " crossorigin="anonymous">
-	<link rel="stylesheet" href="css/technostream.css">
+	<link rel="stylesheet" href="{{asset('css/technostream.css')}}">
     <meta name="_csrf" th:content="${_csrf.token}"/>
 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 @endsection
@@ -77,7 +77,7 @@ function addInfo() {
 }
 function process(e){
   var code = (e.KeyCode ? e.KeyCode : e.which);
-  if(code == 13 || $('#button').click(function)){
+  if(code == 13){
    addInfo();
   }
 }
@@ -127,7 +127,11 @@ function process(e){
             </article>
           </div>
       </div>
-
+        @if (\Auth::user()->admin == 1)
+            <div style="background: lightgrey;width: 110px; border-radius:4px;height: 29px;float: right;text-align: center;opacity: 0.8;color: white;">
+                <a href="{{ route('adminPage') }}"><code>Admin Page</code></a>
+            </div>
+        @endif
     @endif
 @endforeach
 @if (\Auth::user()->streamer == 0)
@@ -169,7 +173,4 @@ function process(e){
         @endif
 </main>
 @endif
-@endsection
-@section('scripts')
-    <script type="text/javascript" src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
 @endsection

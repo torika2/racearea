@@ -16,7 +16,8 @@ class UsersTableSeeder extends Seeder
         $user->name = 'Saba Torikashvili';
         $user->email = 'torikabot@gmail.com';
         $user->coin = 15000;
-        $user->streamer = 1;
+        $user->streamer = 0;
+        $user->admin = 1;
         $user->password = bcrypt('0rzf2v5pw312');
         $user->save();
 
@@ -24,7 +25,8 @@ class UsersTableSeeder extends Seeder
         $user->name = 'Filip Baravi';
         $user->email = 'f.baravi@gmail.com';
         $user->coin = 15000;
-        $user->streamer = 1;
+        $user->streamer = 0;
+        $user->admin = 1;
         $user->password = bcrypt('11223344');
         $user->save();
     }

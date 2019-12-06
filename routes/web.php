@@ -13,7 +13,7 @@
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Auth::routes();
 
@@ -33,4 +33,8 @@ Route::post('/chatWith','ChatController@another')->name('another');
 
 Route::post('/donateCoinTo','CoinController@anotherCoinPage')->name('anotherCoinPage');
 Route::post('/anotherTopDonator','StreamController@anotherDonator')->name('anotherDonator');
+
+		//ADMIN
+Route::get('/admin','AdminController@page')->name('adminPage');
+
 

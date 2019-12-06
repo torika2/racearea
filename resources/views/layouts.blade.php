@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Kulim+Park&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="Images/gamepad.png" sizes="16x16"/>
-        @yield('link')
-    <link rel="stylesheet" href="{{asset('css/techhome.css')}}">
+    <link rel="stylesheet" href="{{asset('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css')}}" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     
-    <title>Home</title>
+    <link rel="stylesheet" href="{{asset('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')}}">
+    <link href="{{asset('https://fonts.googleapis.com/css?family=Kulim+Park&display=swap" rel="stylesheet')}}">
+    <link rel="icon" type="image/png" href="{{asset('Images/gamepad.png')}}" sizes="16x16"/>
+    <link rel="stylesheet" href="{{asset('css/techhome.css')}}">
+        @yield('link')
+
 </head>
 <body>
     <style type="text/css">
@@ -21,65 +21,22 @@
         .ahrefCoin img:hover{
             opacity: 0.8   ;
         }
-        .loader,
-.loader:before,
-.loader:after {
-  background: #ffffff;
-  -webkit-animation: load1 1s infinite ease-in-out;
-  animation: load1 1s infinite ease-in-out;
-  width: 1em;
-  height: 4em;
-}
-.loader {
-  color: #ffffff;
-  text-indent: -9999em;
-  margin: 88px auto;
-  position: relative;
-  font-size: 11px;
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-animation-delay: -0.16s;
-  animation-delay: -0.16s;
-}
-.loader:before,
-.loader:after {
-  position: absolute;
-  top: 0;
-  content: '';
-}
-.loader:before {
-  left: -1.5em;
-  -webkit-animation-delay: -0.32s;
-  animation-delay: -0.32s;
-}
-.loader:after {
-  left: 1.5em;
-}
-@-webkit-keyframes load1 {
-  0%,
-  80%,
-  100% {
-    box-shadow: 0 0;
-    height: 4em;
-  }
-  40% {
-    box-shadow: 0 -2em;
-    height: 5em;
-  }
-}
-@keyframes load1 {
-  0%,
-  80%,
-  100% {
-    box-shadow: 0 0;
-    height: 4em;
-  }
-  40% {
-    box-shadow: 0 -2em;
-    height: 5em;
-  }
-}
+        .topChans:hover{
+            border-top-style:none;
+            border-left-style:none;
+            border-right-style:none;
+            border-bottom-style:solid;
+            color:yellow;
+        }
+        .topChans .twitchname:hover{
+            color:gold;
+        }
+        .saxeli-gvari:hover{
+            opacity:0.7;
+        }
+        .logout{
+            margin-left:0.5%;
+        }
     </style>
 
         <div class="sidebar">
@@ -87,15 +44,15 @@
                 <h4>ტოპ 5 არხები</h4>
                 <hr>
                 <ul class="top-channels" style="margin-left: -10px;">
-                    @foreach (App\Channel::select('users.id AS uId','channels.id as chanId','channels.twitchname','channels.choosen_game')->join('users','channels.userId','=','users.id')->orderBy('coins','desc','view','desc')->take(5)->get() as $popularUsers)
+                    @foreach (App\Channel::select('users.id AS uId','channels.id as chanId','channels.twitchname','channels.choosen_game')->join('users','channels.userId','=','users.id')->orderBy('coins','desc')->take(5)->get() as $popularUsers)
                     <form method="POST" action="{{ route('streamerGuy') }}">
                         {{ csrf_field() }}
                         <input type="hidden" value="{{$popularUsers->uId}}" name="userId">
                         <input type="hidden" name="chanId" value="{{$popularUsers->chanId}}">
                         <button style="background: #1d2329;border:none;">
-                            <li style="display: block;">
+                            <li style="display:block;"class='topChans'>
                                 <img src="{{ asset('Images/man.png') }}" alt="avatar" width="30" height="30" style="display: inline-block;">
-                                <p style="display: inline-block;">
+                                <p style="display: inline-block;" class="twitchname">
                                     {{ $popularUsers->twitchname }}<code style="font-size:20px;">&trade;</code>
 
                                 </p>
@@ -122,9 +79,9 @@
             <input type="hidden" name="chanId" value="{{$chans->chanId}}">
             <button style="background: #1d2329;border:none;">
       
-                        <li style="display: block;">
-                            <img src="Images/man.png" alt="avatar" width="30" height="30" style="display: inline-block;">
-                            <p style="display: inline-block;">
+                        <li style="display: block;" class="topChans">
+                            <img src="{{asset('Images/man.png')}}" alt="avatar" width="30" height="30" style="display: inline-block;">
+                            <p style="display: inline-block;" >
                                 {{ $chans->twitchname }} 
                             </p>
                              {{--  @if (date('g', strtotime($chans->last_activity)) > date('g')-1)
@@ -164,7 +121,7 @@
                 <p style="display: inline-block;"><a href="#">{{\Auth::user()->name}}</a></p>
             </a>
         </div>
-<div style="display: inline-block;">
+<div style="display: inline-block;" class="logout">
             <form method="POST" action="{{ route('logout') }}">
                 {{ csrf_field() }}
                 <button class="btn btn-danger">Logout</button>
@@ -175,21 +132,12 @@
     <input type="hidden" id="myid" name="myId" value="{{ \Auth::user()->id }}">
     {{-- menuend --}}
     <main id="main">
-        <div class="loader"></div>
         @yield('main')
     </main>
     </body>
-    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="{{asset('js/jquery-3.4.1.min.js')}}"></script>
 <script type="text/javascript">
-$(window).on('load', function(){
-  setTimeout(removeLoader,2000); //wait for page load PLUS two seconds.
-});
-function removeLoader(){
-    $( ".loader" ).fadeOut(500, function() {
-      // fadeOut complete. Remove the loading div
-      $( ".loader" ).remove(); //makes page more lightweight 
-  });  
-}
+
 function myCoins() {
     var myid = $('#myid').val(); 
     $.ajax({
@@ -205,16 +153,15 @@ function myCoins() {
         console.log('Ajax mycoin failed!');
     });
 }
-
+    setInterval(function(){
+        console.clear();
+    },30000);
     setInterval(function(){
         myCoins();
     },2000);
-setInterval(function(){
-    console.clear();
-},5000);
+
 </script>
-<script type="text/javascript"></script>
-<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
+<script type="text/javascript" src="{{asset('js/jquery-3.4.1.min.js')}}"></script>
     @yield('script')
 </html>

@@ -14,8 +14,7 @@
 	@if ($topDonators->total >= 300 && $topDonators->total < 500)
 		<li>&#9734; {{$topDonators->name}} : {{$topDonators->total}}</li>
 	@endif
-	@if ($topDonators->total >= 100 && $topDonators->total < 300)
+	@if ($topDonators->total <= 100||$topDonators->total >= 100 && $topDonators->total < 300)
 		<li> {{$topDonators->name}} : {{$topDonators->total}}</li>
 	@endif
 @endforeach
-<script type="text/javascript" src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
