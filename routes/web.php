@@ -12,7 +12,11 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+	if(!\Auth::check()){
+    	return view('welcome');
+	}else{
+		return route('home');
+	}
 })->name('welcome');
 
 Auth::routes();
@@ -33,8 +37,10 @@ Route::post('/chatWith','ChatController@another')->name('another');
 
 Route::post('/donateCoinTo','CoinController@anotherCoinPage')->name('anotherCoinPage');
 Route::post('/anotherTopDonator','StreamController@anotherDonator')->name('anotherDonator');
+Route::post('/anotherTopDonator/banList','StreamController@bannedUsers')->name('bannedUsers');
 
 		//ADMIN
 Route::get('/admin','AdminController@page')->name('adminPage');
-
+Route::get('/adminController','AdminController@adminContr')->name('adminContr');
+Route::post('/admin/editUser','AdminController@userEdit')->name('userEdit');
 

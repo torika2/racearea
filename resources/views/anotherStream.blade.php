@@ -1,6 +1,6 @@
 @extends('layouts')
 @section('link')
-<link href="{{ asset('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN') }} " crossorigin="anonymous">
+<link href="{{ asset('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css') }}" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN " crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="{{asset('css/technostream.css')}}">
   <meta charset="utf-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -59,58 +59,7 @@
 
 {{--             </form> --}}
 
-<script type="text/javascript">
 
-
-function process(e){
-  var code = (e.KeyCode ? e.KeyCode : e.which);
-  if(code == 13){
-    giveComm();
-  }
-}
-
-function giveComm(){
-    var content = $('#content').val();
-    var chanId = $('#chanId').val();
-    var aUserId = $('#aUserId').val();
-        $.ajax({
-          type:'POST',
-          url:'{{ route('anotherChat') }}',
-          data: {
-            content:content,
-            chanId:chanId,
-            aUserId:aUserId,
-            _token:"{{ csrf_token() }}"
-          },
-          success:function() {
-            var content = $('#content').val("");
-          }
-        }).fail(function(){
-          console.log('Input notSuccessful');
-        });
-}
-function takeComm(){
-     var chanId = $('#chanId').val();
-        $.ajax({
-          type:'POST',
-          url:'{{ route('another') }}',
-          data:{
-            _token:"{{csrf_token()}}",
-            chanId:chanId,
-          },
-          success:function(data){
-            $('#comments').html(data);
-          }
-        }).fail(function(){
-          console.log(' OutPut notSuccessful');
-        });
-}
-
-  setInterval(function(){
-    takeComm();
-  },2000);
-
-</script>
         </div>
       </div>
       </div>
@@ -146,8 +95,80 @@ function takeComm(){
       @endforeach
   </div>
 @endif
-<script type="text/javascript" src="{{asset('js/jquery-3.4.1.min.js')}}"></script>
+
+
+
+      </div>
+      <div class="main-about">
+          <div class="main-about-stream">
+            <article>
+                <h4>ტოპ დონატორები</h4>
+                <hr>
+                <ul style="display: block;" id="topDonatorOutput">
+@foreach ($topDonator as $topDonators)
+    <li> {{$topDonators->name}} : {{$topDonators->total}}</li>
+@endforeach     
+                </ul>
+            </article>
+                        <article>
+                <h4>შემოსული სტრიმერები</h4>
+                <hr>
+                <ul style="display: block;" id="topDonatorOutput">
+@if ($userInfo)
+@foreach ($userInfo as $userInfos)
+  <form method="POST" action="{{ route('name') }}">
+    @csrf
+    <li> {{$userInfos->name}} 
+      
+    <select style="background: none;border:none;width: 10%;color:white;">
+        <option style="color:white;">...</option>
+        @if ($userInfos->chatBan != 1)
+          <option value="chat" style="color:black;">chat ban</option>
+        @else
+          <option value="chat" style="color:black;" disabled>chat ban</option>
+        @endif
+        @if ($userInfos->channelBan != 1)
+          <option value="channel"  style="color:black;">channel ban</option>
+        @else
+          <option value="channel"  style="color:black;" disabled>channel ban</option>
+        @endif
+        
+    </select>
+      <button class="btn btn-danger" id="confirmationButoon"></button>
+    </li>
+  </form>
+@endforeach
+@endif
+                </ul>
+            </article>
+          </div>
+      </div>
+@endforeach
+
+@endsection
+@section('script')
 <script type="text/javascript">
+function takeTopDonator(){
+  var chanId = $('#coinChanId').val();
+  $.ajax({
+    type:'POST',
+    url:'{{ route('anotherDonator') }}',
+    data:{
+      _token:"{{csrf_token()}}",
+      chanId:chanId,
+    },
+    success:function(data){
+      $('#topDonatorOutput').html(data);
+    }
+  }).fail(function(){
+    console.log('ajax failed');
+  });
+}
+
+  setInterval(function(){
+    takeTopDonator();
+  },3000);
+
 
 $('#coinButton').on('click',function(){
   var chanId = $('#coinChanId').val();
@@ -195,48 +216,54 @@ function channelCoinAmount(){
     channelCoinAmount();
   },2000);
 
-</script>
+function process(e){
+  var code = (e.KeyCode ? e.KeyCode : e.which);
+  if(code == 13){
+    giveComm();
+  }
+}
 
-      </div>
-      <div class="main-about">
-          <div class="main-about-stream">
-            <article>
-                <h4>ტოპ დონატორები</h4>
-                <hr>
-                <ul style="display: block;" id="topDonatorOutput">
-@foreach ($topDonator as $topDonators)
-    <li> {{$topDonators->name}} : {{$topDonators->total}}</li>
-@endforeach     
-                </ul>
-            </article>
-          </div>
-      </div>
-<script type="text/javascript">
-function takeTopDonator(){
-  var chanId = $('#coinChanId').val();
-  $.ajax({
-    type:'POST',
-    url:'{{ route('anotherDonator') }}',
-    data:{
-      _token:"{{csrf_token()}}",
-      chanId:chanId,
-    },
-    success:function(data){
-      $('#topDonatorOutput').html(data);
-    }
-  }).fail(function(){
-    console.log('ajax failed');
-  });
+function giveComm(){
+    var content = $('#content').val();
+    var chanId = $('#chanId').val();
+    var aUserId = $('#aUserId').val();
+        $.ajax({
+          type:'POST',
+          url:'{{ route('anotherChat') }}',
+          data: {
+            content:content,
+            chanId:chanId,
+            aUserId:aUserId,
+            _token:"{{ csrf_token() }}"
+          },
+          success:function() {
+            var content = $('#content').val(" ");
+          }
+        }).fail(function(){
+          console.log('Input notSuccessful');
+        });
+}
+function takeComm(){
+     var chanId = $('#chanId').val();
+        $.ajax({
+          type:'POST',
+          url:'{{ route('another') }}',
+          data:{
+            _token:"{{csrf_token()}}",
+            chanId:chanId,
+          },
+          success:function(data){
+            $('#comments').html(data);
+          }
+        }).fail(function(){
+          console.log(' OutPut notSuccessful');
+        });
 }
 
   setInterval(function(){
-    takeTopDonator();
-  },3000);
+    takeComm();
+  },2000);
 
 </script>
-@endforeach
-
-@endsection
-@section('script')
 <script src="{{asset('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js')}}" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 @endsection

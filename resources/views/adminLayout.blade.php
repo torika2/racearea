@@ -97,7 +97,7 @@
 				<a href="#" class="list-group-item list-group-item-action list-group-item-dark">
 					<code>Ban</code> Controller
 				</a>
-				<a href="#" class="list-group-item list-group-item-action list-group-item-dark">
+				<a href="{{ route('adminContr') }}" class="list-group-item list-group-item-action list-group-item-dark">
 					<code>Admin</code> Controller
 				</a>
 				<a href="{{ route('home') }}" style="background: darkred;" class="list-group-item list-group-item-action list-group-item-dark">

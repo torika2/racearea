@@ -118,7 +118,7 @@
         <div class="saxeli-gvari" style="display: inline-block;">
            <a href="{{ route('mS') }}">
                 <img style="display: inline-block;" class="rounded-circle" src="{{ asset('Images/man.png') }}" alt="saxeli-gvari" width="42" height="42">
-                <p style="display: inline-block;"><a href="#">{{\Auth::user()->name}}</a></p>
+                <p style="display: inline-block;">{{\Auth::user()->name}}</p>
             </a>
         </div>
 <div style="display: inline-block;" class="logout">
@@ -153,15 +153,13 @@ function myCoins() {
         console.log('Ajax mycoin failed!');
     });
 }
-    setInterval(function(){
-        console.clear();
-    },30000);
+    // setInterval(function(){
+    //     console.clear();
+    // },30000);
     setInterval(function(){
         myCoins();
     },2000);
 
 </script>
-
-<script type="text/javascript" src="{{asset('js/jquery-3.4.1.min.js')}}"></script>
     @yield('script')
 </html>

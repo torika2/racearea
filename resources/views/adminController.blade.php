@@ -22,57 +22,61 @@
     </tr>
     <tr>
       <th scope="col">#</th>
+      <th scope="col">{ Rank }</th>
       <th scope="col">Name</th>
       <th scope="col">Email</th>
-      <th scope="col">Status</th>
+      <th>Status</th>
       <th>-------</th>
-      <th scope="col">Chat Status</th>
-      <th scope="col">Ban Status</th>
     </tr>
   </thead>
   <tbody>
-@if ($users) 
-  @foreach ($users as $user)
+    {{-- admin profile list --}}
+@if ($adminUser) 
+  @foreach ($adminUser as $adminUsers)
     <tr>
-      <th scope="row">{{$user->id}}</th>
-      <td>{{$user->name}}</td>
-      <td>{{$user->email}}</td>
+      <th scope="row">{{$adminUsers->id}}</th>
+      	@if($adminUsers->admin == 1)
+      		<td>
+	      		<b style="color:gold">Admin</b>
+	  		</td>
+  		@endif
+      <td>{{$adminUsers->name}}</td>
+      <td>{{$adminUsers->email}} </td>
       <td>
-        @if ($user->streamer == 1)
+        @if ($adminUsers->streamer == 1)
           Streamer
         @else
           None
         @endif
       </td>
-      @if (\Auth::user()->admin == 1)
-        <td>
-          <form action="{{ route('userEdit') }}" method="POST" style="position: relative;">
-              @csrf
-                    <input type="hidden" name="userId" value="{{$user->id}}" name="userId" >
-              <button class="btn btn-warning" style="color: white;" >Edit</button>
-          </form>
-        </td>
+      {{-- not to edit another admin profile --}}
+      @if ($adminUsers->admin == 1)
+        {{-- permission to change your admin profile --}}
+        @if ($adminUsers->id == \Auth::user()->id)
+          <td>
+            <form action="" method="POST">
+                @csrf
+                <button class="btn btn-warning" style="color: white;">Edit</button>
+            </form>
+          </td>
+        @else
+          <td>
+            <button class="btn btn-warning" style="color: white;" disabled>Edit</button>
+          </td>
+        @endif
       @else
         <td>
-          <form action="{{ route('userEdit') }}" method="POST">
+          <form action="" method="POST">
                 @csrf
-          
-              <button class="btn btn-warning" style="color: white;" disabled>Edit</button>
+            <button class="btn btn-warning" style="color: white;" disabled>Edit</button>
           </form>
         </td>
       @endif
-      {{-- if user banned --}}
-      <td>
-        N/A
-      </td>
-      <td>
-        N/A
-      </td>
     </tr>
   @endforeach
 @else
   <th>  
-    <td>Here will be users list! (User)</td>
+    <td>Here will be admin list! (User)</td>
   </th>
 @endif
   </tbody>
