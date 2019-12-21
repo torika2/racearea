@@ -52,9 +52,10 @@ class StreamController extends Controller
             $chanId = $request->input('chanId');
             $donator = Donator::select('amount')->where('chanId',$chanId)->sum('amount');
             $topDonator = User::distinct()->select('name','chanId')->selectRaw('sum(amount) as total')->join('donators','donators.userId','=','users.id')->where('chanId',$chanId)->groupBy('users.id')->orderBy('total','DESC')->get();
-            $userInfo = bannedUsers::where('chanId',$request->input('chanId'))->get();
-            foreach (bannedUsers::join('users','users.id','=','banned_users.userId')->where('banned_users.chanId',$request->input('chanId'))->get() as $userChecks) {
-                if ($userChecks->userId != Auth::user()->id) {
+            $userInfo = bannedUsers::select('users.id as userId','chatBan','channelBan','name')->join('users','users.id','=','banned_users.userId')->where('chanId',$request->input('chanId'))->get();
+                         
+                $userCheck = bannedUsers::select('userId')->where('chanId',$chanId)->where('userId',Auth::user()->id)->count();
+                if ($userCheck == 0) {
                     $bannCheck = new bannedUsers;
                     $bannCheck->chanId = $request->input('chanId');
                     $bannCheck->userId = Auth::user()->id;
@@ -62,8 +63,8 @@ class StreamController extends Controller
                     $bannCheck->channelBan = 0;
                     $bannCheck->save();
                 }
-            }
 
+                
         return view('anotherStream',compact('chan','chat','donator','topDonator','userInfo'));
     }
     public function anotherDonator(Request $request)

@@ -43,4 +43,4 @@ Route::post('/anotherTopDonator/banList','StreamController@bannedUsers')->name('
 Route::get('/admin','AdminController@page')->name('adminPage');
 Route::get('/adminController','AdminController@adminContr')->name('adminContr');
 Route::post('/admin/editUser','AdminController@userEdit')->name('userEdit');
-
+Route::post('/admin/Search','AdminController@letSearch')->name('letSearch');

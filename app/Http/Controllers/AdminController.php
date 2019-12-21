@@ -41,4 +41,15 @@ class AdminController extends Controller
             return Redirect::to('/home');
         }
     }
+    public function letSearch(Request $request)
+    {
+        $this->validate($request,[
+            'search' => 'required'
+        ]);
+
+        $users = User::join('banned_users','banned_users.userId','=','users.id')->where('users.name','like','%'.$request->input('search').'%')->where('admin',0)->get();
+
+
+        return view('adminSearchControl',compact('users'));
+    }
 }

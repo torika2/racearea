@@ -24,29 +24,32 @@
 			</dir>
 			@endforeach
 			<div>
+			@if ($banInfo)
 				@foreach ($banInfo as $banInfos)
 				<dir>
 					<hr>
 				<dl>
-					@if ($banInfos->chatBan == 1)
+					@if (!is_null($banInfos->chatBan) && !is_null($banInfos->channelBan))
 						<dt style="color: black;">Chat Ban</dt>
-						@if ($banInfos->banned == 1)
-					 		<dd style="color: white;"><kbd style="color: red;">Banned</kbd></dd>
+						@if ($banInfos->chatBan == 1)
+						 		<dd style="color: white;"><kbd style="color: red;">Banned</kbd></dd>
 						@else
-					 		<dd style="color: white;"><kbd>N\A</kbd></dd>
-					 	@endif
-					@endif
-					@if ($banInfos->channelBan == 1)
+						 		<dd style="color: white;"><kbd>N\A</kbd></dd>
+						@endif					 
 						<dt style="color: black;">Channel Ban</dt>
-					 		<dd style="color: white;"><kbd style="color: red;">Banned</kbd></dd>
-					 	@else
-					 		<dd style="color: white;"><kbd>N\A</kbd></dd>
-
+						@if ($banInfos->channelBan == 1)
+						 		<dd style="color: white;"><kbd style="color: red;">Banned</kbd></dd>
+						@else
+						 		<dd style="color: white;"><kbd>N\A</kbd></dd>
+						@endif
+					@else
+						<dd style="color: white;"><kbd>Not active yet.!</kbd></dd>
 					@endif
 				</dl>
 				<hr>
 				</dir>
-				@endforeach
+				@endforeach	
+			@endif
 			</div>
 
 		</div>

@@ -114,7 +114,6 @@
 		@yield('main')
 	</main>
 </body>
-<script type="text/javascript">
-	@yield('script')
-</script>
+<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+@yield('script')
 </html>

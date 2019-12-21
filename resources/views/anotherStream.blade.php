@@ -116,26 +116,29 @@
                 <ul style="display: block;" id="topDonatorOutput">
 @if ($userInfo)
 @foreach ($userInfo as $userInfos)
-  <form method="POST" action="{{ route('name') }}">
+  <form method="POST" action="">
     @csrf
-    <li> {{$userInfos->name}} 
-      
-    <select style="background: none;border:none;width: 10%;color:white;">
-        <option style="color:white;">...</option>
-        @if ($userInfos->chatBan != 1)
-          <option value="chat" style="color:black;">chat ban</option>
-        @else
-          <option value="chat" style="color:black;" disabled>chat ban</option>
-        @endif
-        @if ($userInfos->channelBan != 1)
-          <option value="channel"  style="color:black;">channel ban</option>
-        @else
-          <option value="channel"  style="color:black;" disabled>channel ban</option>
-        @endif
-        
-    </select>
-      <button class="btn btn-danger" id="confirmationButoon"></button>
-    </li>
+    @if ($userInfos->userId != $chans->uId)
+      <li> {{$userInfos->name}} 
+      @if (\Auth::user()->id == $chans->uId)
+      <select style="background: none;border:none;width: 10%;color:white;">
+          <option style="color:white;">...</option>
+          @if ($userInfos->chatBan != 1)
+            <option value="chat" style="color:black;">chat ban</option>
+          @else
+            <option value="chat" style="color:black;" disabled>chat ban</option>
+          @endif
+          @if ($userInfos->channelBan != 1)
+            <option value="channel"  style="color:black;">channel ban</option>
+          @else
+            <option value="channel"  style="color:black;" disabled>channel ban</option>
+          @endif
+          
+      </select>
+        <button class="btn btn-danger" id="confirmationButoon"></button>
+      </li>
+      @endif
+    @endif
   </form>
 @endforeach
 @endif
@@ -148,6 +151,7 @@
 @endsection
 @section('script')
 <script type="text/javascript">
+
 function takeTopDonator(){
   var chanId = $('#coinChanId').val();
   $.ajax({

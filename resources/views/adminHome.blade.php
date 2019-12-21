@@ -17,7 +17,10 @@
   <thead>
     <tr>
       <div class="md-form mt-0" style="border-radius: none;">
-          <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+      {{--   <form method="POST" action="{{ route('letSearch') }}"> --}}
+          @csrf
+          <input onkeypress="process(event,this)" id="searchContent" class="form-control" type="text" placeholder="Search" aria-label="Search">
+    {{--     </form> --}}
       </div>
     </tr>
     <tr>
@@ -31,6 +34,7 @@
     </tr>
   </thead>
   <tbody>
+<div id="searchedUsers">
 @if ($users) 
   @foreach ($users as $user)
     <tr>
@@ -71,14 +75,43 @@
     </tr>
   @endforeach
 @else
+
   <th>  
     <td>Here will be users list! (User)</td>
   </th>
 @endif
+</div>
   </tbody>
 </table>
 </div>
 @endsection
+
 @section('script')
-	
+	<script type="text/javascript">
+  function process(e){
+    var code = (e.KeyCode ? e.KeyCode : e.which);
+      if(code == 13){
+        letsSearch();
+      }
+  } 
+function letsSearch() {
+  var search = $('#searchContent').val();
+        $.ajax({
+          type:'POST',
+          url:'{{ route('letSearch') }}',
+          data:{
+            _token:"{{csrf_token()}}",
+            search:search
+          },
+          success:function(){
+            $('#searchContent').val('');
+            $('#searchedUsers').html(data);
+            // console.log('ajax complited!');
+          }
+        }).fail(function(){
+          console.log('NO!! AJAX COIN');
+        });
+}
+
+  </script>
 @endsection
