@@ -72,6 +72,20 @@
 		background: #343a45;
 		color: white;
 	}
+	@media only screen and (max-width: 1125px){
+		.adminName{
+			margin-left: 23%;
+		}
+		#searchContent{
+    		margin-top: 3.3%;
+  		}
+	}
+	@media only screen and (max-width: 984px){
+		.adminName{
+			margin-left: 21%;
+			margin-top: 1.8%;
+		}
+	}
 </style>
 <nav class="nav">
 		<a href="{{ route('adminPage') }}" class="logoLink">

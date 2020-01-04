@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('image_upload')->nullable();
             $table->integer('coin')->default(0);
             $table->integer('streamer')->default(0);
             $table->integer('admin')->default(0);

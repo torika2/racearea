@@ -53,7 +53,7 @@ class StreamController extends Controller
             $donator = Donator::select('amount')->where('chanId',$chanId)->sum('amount');
             $topDonator = User::distinct()->select('name','chanId')->selectRaw('sum(amount) as total')->join('donators','donators.userId','=','users.id')->where('chanId',$chanId)->groupBy('users.id')->orderBy('total','DESC')->get();
             $userInfo = bannedUsers::select('users.id as userId','chatBan','channelBan','name')->join('users','users.id','=','banned_users.userId')->where('chanId',$request->input('chanId'))->get();
-                         
+
                 $userCheck = bannedUsers::select('userId')->where('chanId',$chanId)->where('userId',Auth::user()->id)->count();
                 if ($userCheck == 0) {
                     $bannCheck = new bannedUsers;
@@ -62,9 +62,7 @@ class StreamController extends Controller
                     $bannCheck->chatBan = 0;
                     $bannCheck->channelBan = 0;
                     $bannCheck->save();
-                }
-
-                
+                }    
         return view('anotherStream',compact('chan','chat','donator','topDonator','userInfo'));
     }
     public function anotherDonator(Request $request)
@@ -83,5 +81,37 @@ class StreamController extends Controller
         $this->validate($request,[
             '' => 'required'
         ]);
+    }
+    public function banStreamUser(Request $request)
+    {
+        $this->validate($request,[
+            'streamerUserId' => 'required|integer',
+            'selectedBan' => 'required|string',
+            'chanId' => 'required|integer'
+        ]);
+
+        if ($request->input('selectedBan') == 'chat') {
+            bannedUsers::where('chanId',$request->input('chanId'))->where('userId',$request->input('streamerUserId'))->update(['chatBan' => 1]);
+        }
+        if ($request->input('selectedBan') == 'channel') {
+            bannedUsers::where('chanId',$request->input('chanId'))->where('userId',$request->input('streamerUserId'))->update(['channelBan' => 1]);
+        }
+
+        return \Redirect::to('/home');
+    }
+    public function uploadPhoto(Request $request)
+    {
+
+        $this->validate($request,[
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+
+        if ($request->hasFile('image')) {
+            $image = time().'.'.$request->file('image')->getClientOriginalExtension();
+            $filePath = $request->image->move('public\uploadedImage',$image);
+
+            User::where('id',Auth::user()->id)->update(['image_picture' => $filePath]);
+        }
+        return redirect('myStream');
     }
 }

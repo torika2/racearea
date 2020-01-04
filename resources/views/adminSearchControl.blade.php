@@ -1,5 +1,4 @@
-@if ($users) 
-  @foreach ($users as $user)
+@foreach ($users as $user)
     <tr>
       <th scope="row">{{$user->id}}</th>
       <td>{{$user->name}}</td>
@@ -37,9 +36,3 @@
       </td>
     </tr>
   @endforeach
-@else
-
-  <th>  
-    <td>Here will be users list! (User)</td>
-  </th>
-@endif

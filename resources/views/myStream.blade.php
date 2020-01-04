@@ -1,4 +1,5 @@
 @extends('layouts')
+@section('title','Profile Page')
 @section('link')
 <link href="{{ asset('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN') }} " crossorigin="anonymous">
 	<link rel="stylesheet" href="{{asset('css/technostream.css')}}">
@@ -13,7 +14,7 @@
             App\Channel::where('userId',\Auth::user()->id)->update(['coins' => $donators]);
       @endphp
       <div id="iframe" class="main-stream" style="width: 70%; height: 500px;display: inline-block;">
-            <iframe
+          <iframe
             src="https://player.twitch.tv/?channel={{$chans->twitchname}}&muted=true"
             height="100%"
             width="100%"
@@ -45,12 +46,19 @@
         <div class="chat-input">
 {{--             <form id="chatForm" action="{{ route('chat') }}" method="POST">
                 {{ csrf_field() }} --}}
-                <input onkeypress="process(event,this)" type="text" id="content" name="content">
-                <input id="chanId" type="hidden" name="chanId" value="{{ $chans->id }}">
-                @if ($chans->userId == \Auth::user()->id)
-                    <input type="hidden" name="myId" value="{{ $chans->userId }}">
-                @endif
-                <button id="button"  type="submit" class="btn btn-primary" style="display: inline-block;"></button>
+{{--                 @foreach (App\bannedUsers::join('users','users.id','=','banned_users.userId')->where('chanId',$chans->chanId)->get() as $bannedUser)
+                  @if ($bannedUser->chatBan == null) --}}
+                    
+                    <input onkeypress="process(event,this)" type="text" id="content" name="content">
+                    <input id="chanId" type="hidden" name="chanId" value="{{ $chans->id }}">
+                      @if ($chans->userId == \Auth::user()->id)
+                        <input type="hidden" name="myId" value="{{ $chans->userId }}">
+                      @endif
+                    <button id="button"  type="submit" class="btn btn-primary" style="display: inline-block;"></button>
+{{--                   @else
+                    <input type="text"  disabled>
+                  @endif
+                @endforeach --}}
 {{--             </form> --}}
 
 <script type="text/javascript">
@@ -125,14 +133,33 @@ function process(e){
                   @endforeach
                 </ul>
             </article>
+            {{-- upload --}}
+ 
           </div>
       </div>
+      <div>
+    <form  method="POST" action="{{ route('uploadPhoto') }}" enctype="multipart/form-data"> 
+      @csrf
+      <input class="file-upload" type="file" name="image">
+      <button class="btn btn-primary">Upload Image</button>
+    </form>
+
+    @if($errors->any())
+    <div class="alert alert-danger">
+      @foreach ($errors->all() as $error)      
+        <li>{{$error}}</li>
+      @endforeach
+      </div>
+    @endif
+</div>
         @if (\Auth::user()->admin == 1)
             <div style="background: lightgrey;width: 110px; border-radius:4px;height: 29px;float: right;text-align: center;opacity: 0.8;color: white;">
                 <a href="{{ route('adminPage') }}"><code>Admin Page</code></a>
             </div>
+
         @endif
     @endif
+
 @endforeach
 @if (\Auth::user()->streamer == 0)
 <main class="main" style="height: 545px;">

@@ -11,6 +11,7 @@
   table{
     background: #343a45;
   }
+  
 </style>
 <div style="margin:1%">
 <table class="table table-striped">
@@ -29,8 +30,6 @@
       <th scope="col">Email</th>
       <th scope="col">Status</th>
       <th>-------</th>
-      <th scope="col">Chat Status</th>
-      <th scope="col">Ban Status</th>
     </tr>
   </thead>
   <tbody>
@@ -65,14 +64,6 @@
           </form>
         </td>
       @endif
-      {{-- if user banned --}}
-      <td>
-        N/A
-      </td>
-      <td>
-        N/A
-      </td>
-    </tr>
   @endforeach
 @else
 
@@ -87,7 +78,7 @@
 @endsection
 
 @section('script')
-	<script type="text/javascript">
+<script type="text/javascript">
   function process(e){
     var code = (e.KeyCode ? e.KeyCode : e.which);
       if(code == 13){
@@ -104,8 +95,8 @@ function letsSearch() {
             search:search
           },
           success:function(){
-            $('#searchContent').val('');
             $('#searchedUsers').html(data);
+            $('#searchContent').val(" ");
             // console.log('ajax complited!');
           }
         }).fail(function(){
@@ -113,5 +104,5 @@ function letsSearch() {
         });
 }
 
-  </script>
+</script>
 @endsection

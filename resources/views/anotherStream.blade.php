@@ -1,4 +1,5 @@
 @extends('layouts')
+@section('title','Channel Page')
 @section('link')
 <link href="{{ asset('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css') }}" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN " crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="{{asset('css/technostream.css')}}">
@@ -51,10 +52,17 @@
                   <input id="chanId" type="hidden" name="chanId" value="{{ $chans->chanId }}">
                   <button id="chatAdd" class="btn btn-primary" style="display: inline-block;height: 32px;font-size: 19px;" disabled></button>
                 @else
-                  <input onkeypress="process(event,this)" id="content" type="text" style="color:white;" name="content">
-                  <input id="aUserId" type="hidden" name="aUserId" value="{{ $chans->uId }}">
-                  <input id="chanId" type="hidden" name="chanId" value="{{ $chans->chanId }}">
-                  <button id="chatAdd" class="btn btn-primary" style="display: inline-block;height: 32px;font-size: 19px;"></button>
+                  @foreach(App\bannedUsers::where('chanId',$chans->chanId)->where('userId',\Auth::user()->id)->get() as $ban)
+                    @if($ban->chatBan == 0)
+                      <input onkeypress="process(event,this)" id="content" type="text" style="color:white;" name="content">
+                      
+                      <button id="chatAdd" class="btn btn-primary" style="display: inline-block;height: 32px;font-size: 19px;"></button>
+                    @else
+                      <input id="aUserId" type="hidden" name="aUserId" value="{{ $chans->uId }}">
+                      <input id="chanId" type="hidden" name="chanId" value="{{ $chans->chanId }}">
+                      <input type="text" placeholder="You have chat ban!" disabled/>
+                    @endif
+                  @endforeach
                 @endif
 
 {{--             </form> --}}
@@ -116,25 +124,27 @@
                 <ul style="display: block;" id="topDonatorOutput">
 @if ($userInfo)
 @foreach ($userInfo as $userInfos)
-  <form method="POST" action="">
+  <form method="POST" action="{{ route('banStreamUser') }}">
     @csrf
     @if ($userInfos->userId != $chans->uId)
       <li> {{$userInfos->name}} 
       @if (\Auth::user()->id == $chans->uId)
-      <select style="background: none;border:none;width: 10%;color:white;">
-          <option style="color:white;">...</option>
+      <select name="selectedBan" style="background: none;border:none;width: 10%;color:white;">
+          <option style="color:white;" >...</option>
           @if ($userInfos->chatBan != 1)
             <option value="chat" style="color:black;">chat ban</option>
           @else
-            <option value="chat" style="color:black;" disabled>chat ban</option>
+            <option style="color:red;" disabled>chat ban</option>
           @endif
           @if ($userInfos->channelBan != 1)
-            <option value="channel"  style="color:black;">channel ban</option>
+            <option value="channel"  style="color:black;" >channel ban</option>
           @else
-            <option value="channel"  style="color:black;" disabled>channel ban</option>
+            <option style="color:red;" disabled>channel ban</option>
           @endif
           
       </select>
+        <input type="hidden" name="chanId" value="{{$chans->chanId}}">
+        <input type="hidden" name="streamerUserId" value="{{$userInfos->userId}}">
         <button class="btn btn-danger" id="confirmationButoon"></button>
       </li>
       @endif
@@ -224,6 +234,7 @@ function process(e){
   var code = (e.KeyCode ? e.KeyCode : e.which);
   if(code == 13){
     giveComm();
+    $('#content').val('')
   }
 }
 
@@ -241,7 +252,7 @@ function giveComm(){
             _token:"{{ csrf_token() }}"
           },
           success:function() {
-            var content = $('#content').val(" ");
+            var content = $('#content').val('');
           }
         }).fail(function(){
           console.log('Input notSuccessful');

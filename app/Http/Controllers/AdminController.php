@@ -35,8 +35,9 @@ class AdminController extends Controller
         if ($request->input('userId')) {
             $userInfo = User::where('users.id',$request->input('userId'))->get();
             $banInfo = bannedUsers::where('userId',$request->input('userId'))->get();
+            $channel = Channel::all();
 
-            return view('adminUserEdit',compact('userInfo','banInfo'));   
+            return view('adminUserEdit',compact('userInfo','banInfo','channel'));   
         }else{
             return Redirect::to('/home');
         }
@@ -51,5 +52,42 @@ class AdminController extends Controller
 
 
         return view('adminSearchControl',compact('users'));
+    }
+    public function adminBan(Request $request)
+    {
+                $this->validate($request,[
+                    'userId' => 'required|integer',
+                    'chanId' => 'required|integer'
+                ]);
+                // if($request->input('banChat') != 1 || $request->input('banChat') != 0 || $request->input('unBanChat') != 0 || $request->input('unBanChat') != 1 || $request->input('unBanChannel') != 1 || $request->input('banChannel') != 0 || $request->input('unBanChannel') != 0 || $request->input('banChannel') != 1){
+                //     dd("Dont Try That!");
+                //     return Redirect::to('/admin');
+                // }
+            if ($request->input('unBanChat') != null) {
+                $this->validate($request,[
+                    'unBanChat' => 'required|integer'
+                ]);
+                $ban = bannedUsers::where('chanId',$request->input('chanId'))->where('userId',$request->input('userId'))->update(['chatBan'=> 0]);
+            }
+            if ($request->input('banChat') != null) {
+                $this->validate($request,[
+                    'banChat' => 'required|integer'
+                ]);
+                $ban = bannedUsers::where('chanId',$request->input('chanId'))->where('userId',$request->input('userId'))->update(['chatBan'=> 1]);
+            }
+            if ($request->input('banChannel') != null) {
+                $this->validate($request,[
+                    'banChannel' => 'required|integer'
+                ]);
+                $ban = bannedUsers::where('chanId',$request->input('chanId'))->where('userId',$request->input('userId'))->update(['channelBan'=> 1]);
+            }
+            if ($request->input('unBanChannel') != null) {
+                $this->validate($request,[
+                    'unBanChannel' => 'required|integer'
+                ]);
+                $ban = bannedUsers::where('chanId',$request->input('chanId'))->where('userId',$request->input('userId'))->update(['channelBan'=> 0]);
+            }
+
+            return Redirect::to('/admin');
     }
 }
