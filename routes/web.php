@@ -20,7 +20,7 @@ Route::get('/', function () {
 })->name('welcome');
 
 Auth::routes();
-
+		//USER SIDE
 Route::post('/myCoins','CoinController@layoutCoin')->name('layoutCoin');
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -46,5 +46,6 @@ Route::post('/another/ban','StreamController@banStreamUser')->name('banStreamUse
 Route::get('/admin','AdminController@page')->name('adminPage');
 Route::get('/adminController','AdminController@adminContr')->name('adminContr');
 Route::post('/admin/editUser','AdminController@userEdit')->name('userEdit');
-Route::post('/admin/Search','AdminController@letSearch')->name('letSearch');
+Route::post('/admin/search','AdminController@letSearch')->name('letSearch');
+Route::post('/adminController/search','AdminController@searchAdmin')->name('searchAdmin');
 Route::post('/admin/ban','AdminController@adminBan')->name('adminBan');

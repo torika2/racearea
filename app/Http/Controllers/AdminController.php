@@ -27,6 +27,15 @@ class AdminController extends Controller
     	$adminUser = User::where('admin',1)->get();
     	return view('adminController',compact('adminUser'));
     }
+    public function searchAdmin(Request $request)
+    {
+        $this->validate($request,[
+            'search' => 'required'
+        ]);
+        $adminUser = User::where('name','like','%'.$request->input('search').'%')->get();
+
+        return view('adminControllerForeach',compact('adminUser'));
+    }
     public function userEdit(Request $request)
     {
         $this->validate($request,[
@@ -48,9 +57,12 @@ class AdminController extends Controller
             'search' => 'required'
         ]);
 
-        $users = User::join('banned_users','banned_users.userId','=','users.id')->where('users.name','like','%'.$request->input('search').'%')->where('admin',0)->get();
+        $users = User::join('banned_users','banned_users.userId','=','users.id')->where('users.name',$request->input('search'))->where('admin',0)->get();
 
-
+        if ($users->count() == 0) {
+            $users =  User::join('banned_users','banned_users.userId','=','users.id')->where('users.name','like','%'.$request->input('search').'%')->where('admin',0)->get();
+        }
+        
         return view('adminSearchControl',compact('users'));
     }
     public function adminBan(Request $request)

@@ -14,7 +14,7 @@
   
 </style>
 <div style="margin:1%">
-<table class="table table-striped">
+<table class="table table-striped" >
   <thead>
     <tr>
       <div class="md-form mt-0" style="border-radius: none;">
@@ -32,46 +32,48 @@
       <th>-------</th>
     </tr>
   </thead>
-  <tbody>
-<div id="searchedUsers">
+  <tbody id="forAjaxTable">
+
 @if ($users) 
   @foreach ($users as $user)
-    <tr>
-      <th scope="row">{{$user->id}}</th>
-      <td>{{$user->name}}</td>
-      <td>{{$user->email}}</td>
-      <td>
-        @if ($user->streamer == 1)
-          Streamer
-        @else
-          None
-        @endif
-      </td>
-      @if (\Auth::user()->admin == 1)
+    <div id="searchedUsers" >
+      <tr >
+        <th scope="row">{{$user->id}}</th>
+        <td>{{$user->name}}</td>
+        <td>{{$user->email}}</td>
         <td>
-          <form action="{{ route('userEdit') }}" method="POST" style="position: relative;">
-              @csrf
-                    <input type="hidden" name="userId" value="{{$user->id}}" name="userId" >
-              <button class="btn btn-warning" style="color: white;" >Edit</button>
-          </form>
+          @if ($user->streamer == 1)
+            Streamer
+          @else
+            Guest
+          @endif
         </td>
-      @else
-        <td>
-          <form action="{{ route('userEdit') }}" method="POST">
+        @if (\Auth::user()->admin == 1)
+          <td>
+            <form action="{{ route('userEdit') }}" method="POST" style="position: relative;">
                 @csrf
-          
-              <button class="btn btn-warning" style="color: white;" disabled>Edit</button>
-          </form>
-        </td>
-      @endif
+                      <input type="hidden" name="userId" value="{{$user->id}}" name="userId" >
+                <button class="btn btn-warning" style="color: white;" >Edit</button>
+            </form>
+          </td>
+        @else
+          <td>
+            <form action="#" method="POST">
+                  @csrf
+            
+                <button class="btn btn-warning" style="color: white;" disabled>Edit</button>
+            </form>
+          </td>
+        @endif
+      </tr>
+    </div>
   @endforeach
 @else
-
   <th>  
-    <td>Here will be users list! (User)</td>
+    <td>Users not exist yet!</td>
   </th>
 @endif
-</div>
+
   </tbody>
 </table>
 </div>
@@ -83,6 +85,7 @@
     var code = (e.KeyCode ? e.KeyCode : e.which);
       if(code == 13){
         letsSearch();
+        $('#searchContent').val(" ");
       }
   } 
 function letsSearch() {
@@ -94,15 +97,13 @@ function letsSearch() {
             _token:"{{csrf_token()}}",
             search:search
           },
-          success:function(){
-            $('#searchedUsers').html(data);
-            $('#searchContent').val(" ");
+          success:function(data){
+            $('#forAjaxTable').html(data);
             // console.log('ajax complited!');
-          }
+          },
         }).fail(function(){
           console.log('NO!! AJAX COIN');
         });
 }
-
 </script>
 @endsection

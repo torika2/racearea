@@ -9,7 +9,7 @@
 	<title>@yield('title')</title>
 </head>
 <body>
-<style type="text/css">
+<style>
 	.nav{
 		position: fixed;
 		width: 100%;
@@ -72,20 +72,48 @@
 		background: #343a45;
 		color: white;
 	}
-	@media only screen and (max-width: 1125px){
-		.adminName{
-			margin-left: 23%;
-		}
-		#searchContent{
-    		margin-top: 3.3%;
-  		}
-	}
-	@media only screen and (max-width: 984px){
-		.adminName{
-			margin-left: 21%;
-			margin-top: 1.8%;
-		}
-	}
+@media only screen and (max-width: 1125px){
+    .adminName{
+      margin-left: 23%;
+    }
+    #searchContent{
+        margin-top: 3%;
+      }
+  }
+  @media only screen and (max-width: 984px){
+    .adminName{
+      margin-left: 21%;
+      margin-top: 1.8%;
+    }
+        #searchContent{
+          margin-top: 5%;
+        }
+  }
+  @media only screen and (max-width: 931px){
+    .adminName{
+      margin-left: 17%;
+      margin-top: 1.8%;
+    }
+  }
+
+  @media only screen and (max-width: 844px){
+    .adminName{
+      margin-left: 13%;
+      margin-top: 2.2%;
+    }
+        #searchContent{
+          margin-top: 5%;
+        }
+  }
+  @media only screen and (max-width: 375px){
+    .adminName{
+      margin-top: 2.2%;
+    }
+    #searchContent{
+      margin-top: 20%;
+    }
+  }
+	
 </style>
 <nav class="nav">
 		<a href="{{ route('adminPage') }}" class="logoLink">

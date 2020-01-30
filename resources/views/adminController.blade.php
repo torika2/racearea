@@ -11,13 +11,16 @@
   table{
     background: #343a45;
   }
+  
+
 </style>
+
 <div style="margin:1%">
 <table class="table table-striped">
   <thead>
     <tr>
-      <div class="md-form mt-0" style="border-radius: none;">
-          <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+      <div class="md-form mt-0" style="border-radius: none;" >
+          <input onkeypress="process(event,this)" class="form-control" id="searchContent" type="text" placeholder="Search" aria-label="Search" name="search">
       </div>
     </tr>
     <tr>
@@ -29,7 +32,7 @@
       <th>-------</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody id="forAjaxTable">
     {{-- admin profile list --}}
 @if ($adminUser) 
   @foreach ($adminUser as $adminUsers)
@@ -74,15 +77,36 @@
       @endif
     </tr>
   @endforeach
-@else
-  <th>  
-    <td>Here will be admin list! (User)</td>
-  </th>
 @endif
   </tbody>
 </table>
 </div>
 @endsection
 @section('script')
-	
+<script type="text/javascript">
+  function process(e){
+    var code = (e.KeyCode ? e.KeyCode : e.which);
+      if(code == 13){
+        letsSearch();
+        $('#searchContent').val(" ");
+      }
+  } 
+function letsSearch() {
+  var search = $('#searchContent').val();
+        $.ajax({
+          type:'POST',
+          url:'{{ route('searchAdmin') }}',
+          data:{
+            _token:"{{csrf_token()}}",
+            search:search
+          },
+          success:function(data){
+            $('#forAjaxTable').html(data);
+            // console.log('ajax complited!');
+          },
+        }).fail(function(){
+          console.log('NO!! AJAX COIN');
+        });
+}
+</script>
 @endsection
