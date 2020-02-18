@@ -1,11 +1,12 @@
 @extends('layouts')
 @section('title','Profile Page')
 @section('link')
-<link href="{{ asset('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN') }} " crossorigin="anonymous">
+<link href="{{ asset('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css') }}" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN " crossorigin="anonymous">
 	<link rel="stylesheet" href="{{asset('css/technostream.css')}}">
     <meta name="_csrf" th:content="${_csrf.token}"/>
 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 @endsection
+
 @section('main')
 @foreach ($chan as $chans)
     @if ($chans->userId == \Auth::user()->id && \Auth::user()->streamer == 1)
@@ -85,7 +86,7 @@ function addInfo() {
 }
 function process(e){
   var code = (e.KeyCode ? e.KeyCode : e.which);
-  if(code == 13){
+  if(code == 13 || $('#button').click()){
    addInfo();
   }
 }
@@ -100,7 +101,7 @@ function process(e){
                  data:{
                   _token:"{{csrf_token()}}",
                   chanId:chanId,
-                  lastMsg:$(".chat-user-text")[$(".chat-user-text").length-1].getAttribute("data")},
+                  }
                  success:function(data) {
                      $('#comments').append(data);
                  }
@@ -138,7 +139,7 @@ function process(e){
           </div>
       </div>
       <div>
-    <form  method="POST" action="{{ route('uploadPhoto') }}" enctype="multipart/form-data"> 
+    <form  method="POST" action="{{ route('uploadPhoto') }}" style="margin-top: -20.9%;" enctype="multipart/form-data"> 
       @csrf
       <input class="file-upload" type="file" name="image">
       <button class="btn btn-primary">Upload Image</button>
@@ -152,6 +153,33 @@ function process(e){
       </div>
     @endif
 </div>
+{{-- UPLOADED IMAGE START--}}
+@if ($image->count() > 0)
+  <div class="grid-container2">
+     @foreach ($image as $images)
+      <div class="grid-item2">
+        <form method="POST" action="{{ route('profilePic') }}">
+          @csrf
+          @method('put')
+          <input type="hidden" name="image_id" value="{{$images->id}}">
+          <button style="background: none;border:none;" class="imageBut">
+            <img height="100" width="100" src="{{$images->profile_image}}">
+          </button>
+        </form>
+        @if ($images->profile_image != 'Images/man.png')
+        <form method="POST" action="{{ route('profilePicDelete') }}">
+          @csrf
+          @method('delete')
+          <input type="hidden" name="image_id" value="{{$images->id}}">
+          <input type="hidden" name="image_path" value="{{$images->profile_image}}">
+          <button class="btn btn-danger">Delete</button>
+        </form>
+        @endif
+      </div>
+    @endforeach
+  </div>
+@endif
+{{-- UPLOADED IMAGE END --}}
         @if (\Auth::user()->admin == 1)
             <div style="background: lightgrey;width: 110px; border-radius:4px;height: 29px;float: right;text-align: center;opacity: 0.8;color: white;">
                 <a href="{{ route('adminPage') }}"><code>Admin Page</code></a>

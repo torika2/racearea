@@ -24,8 +24,8 @@
     border-bottom: solid;
   }
 </style>
-
 @foreach ($chan as $chans)
+
       <div id="iframe" class="main-stream" style="width: 70%; height: 500px;display: inline-block;">
         <iframe
             src="https://player.twitch.tv/?channel={{$chans->twitchname}}&muted=true"
@@ -41,13 +41,16 @@
         <div class="chat-output">
             <div id="comments" class="chat-message">
                 <!-- CHAT OUTPUT HERE! -->
+
+            </div>
         </div>
-        </div>
+
         <div class="chat-input">
 {{--             <form action="{{ route('anotherChat') }}" method="POST">
                 {{ csrf_field() }} --}}
                 @if (\Auth::user()->streamer == 0)
                   <input onkeypress="process(event,this)" id="content" type="text" style="color:white;" name="content" disabled>
+
                   <input id="aUserId" type="hidden" name="aUserId" value="{{ $chans->uId }}">
                   <input id="chanId" type="hidden" name="chanId" value="{{ $chans->chanId }}">
                   <button id="chatAdd" class="btn btn-primary" style="display: inline-block;height: 32px;font-size: 19px;" disabled></button>
@@ -55,11 +58,10 @@
                   @foreach(App\bannedUsers::where('chanId',$chans->chanId)->where('userId',\Auth::user()->id)->get() as $ban)
                     @if($ban->chatBan == 0)
                       <input onkeypress="process(event,this)" id="content" type="text" style="color:white;" name="content">
-                      
+                      <input id="aUserId" type="hidden" name="aUserId" value="{{ $chans->uId }}">
+                  <input id="chanId" type="hidden" name="chanId" value="{{ $chans->chanId }}">
                       <button id="chatAdd" class="btn btn-primary" style="display: inline-block;height: 32px;font-size: 19px;"></button>
                     @else
-                      <input id="aUserId" type="hidden" name="aUserId" value="{{ $chans->uId }}">
-                      <input id="chanId" type="hidden" name="chanId" value="{{ $chans->chanId }}">
                       <input type="text" placeholder="You have chat ban!" disabled/>
                     @endif
                   @endforeach
@@ -114,8 +116,8 @@
                 <hr>
                 <ul style="display: block;" id="topDonatorOutput">
 @foreach ($topDonator as $topDonators)
-    <li> {{$topDonators->name}} : {{$topDonators->total}}</li>
-@endforeach     
+    <li> {{$topDonators->name}} : {{$topDonators->total}} </li>
+@endforeach    
                 </ul>
             </article>
                         <article>
@@ -160,6 +162,7 @@
 
 @endsection
 @section('script')
+<script src="{{ asset('http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js') }}"></script>
 <script type="text/javascript">
 
 function takeTopDonator(){
@@ -252,14 +255,15 @@ function giveComm(){
             _token:"{{ csrf_token() }}"
           },
           success:function() {
-            var content = $('#content').val('');
+             content.val('');
           }
         }).fail(function(){
           console.log('Input notSuccessful');
         });
 }
+
 function takeComm(){
-     var chanId = $('#chanId').val();
+     var chanId = $('#coinChanId').val();
         $.ajax({
           type:'POST',
           url:'{{ route('another') }}',
@@ -277,7 +281,7 @@ function takeComm(){
 
   setInterval(function(){
     takeComm();
-  },2000);
+  },1000);
 
 </script>
 <script src="{{asset('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js')}}" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

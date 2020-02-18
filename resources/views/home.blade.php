@@ -15,7 +15,21 @@
     }
 </style>
 @if (!empty($channel))
+        @if ( $channel->userId == \Auth::user()->id )
         <div class="popular-stream">
+                <iframe style="border: solid 2px orange" 
+                src="https://player.twitch.tv/?channel=
+   {{$channel->twitchname}}
+             &muted=true"
+                height="100%"
+                width="100%"
+                frameborder="0"
+                scrolling="no"
+                allowfullscreen="true">
+            </iframe>
+        </div>
+        @else
+                <div class="popular-stream">
                 <iframe
                 src="https://player.twitch.tv/?channel=
    {{$channel->twitchname}}
@@ -26,8 +40,10 @@
                 scrolling="no"
                 allowfullscreen="true">
             </iframe>
-@endif
         </div>
+        @endif
+@endif
+        
         <hr>
         <h3 style="text-align: center;">ტოპ სტრიმები</h3>
         <div class="stream-grid">
@@ -35,6 +51,18 @@
              @foreach ($topStreams as $topStream)
                 @if ($topStream->userId != $channel->userId)
                     <article>
+                        @if ($topStream->userId == Auth::user()->id)
+                            <div class="recomended-streams" style="border: solid 3px orange;width: 339px; height: 250px;">
+                                <iframe
+                                    src="https://player.twitch.tv/?channel={{$topStream->twitchname}}&muted=true"
+                                    height="100%"
+                                    width="100%"
+                                    frameborder="0"
+                                    scrolling="no"
+                                    allowfullscreen="true">
+                                </iframe>
+                            </div>
+                            @else
                             <div class="recomended-streams" style="width: 339px; height: 250px;">
                                 <iframe
                                     src="https://player.twitch.tv/?channel={{$topStream->twitchname}}&muted=true"
@@ -45,6 +73,7 @@
                                     allowfullscreen="true">
                                 </iframe>
                             </div>
+                        @endif
                     </article>
                 @endif
             @endforeach

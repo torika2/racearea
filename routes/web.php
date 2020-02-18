@@ -25,9 +25,14 @@ Route::post('/myCoins','CoinController@layoutCoin')->name('layoutCoin');
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/myStream','HomeController@Mystream')->name('mS');
+Route::put('/myStream/profile/picture','HomeController@profilePic')->name('profilePic');
+Route::delete('myStream/profile/picture/delete','HomeController@profilePicDelete')->name('profilePicDelete');
 Route::get('/coinPage','HomeController@buy')->name('coinBuy');
 Route::post('/createStream','StreamController@create')->name('createChannel');
 Route::post('/channelChat','ChatController@create')->name('chat');
+		//USER GOOGLE
+Route::get('/auth/redirect/{provider}', 'ServiceController@redirect');
+Route::get('/callback/{provider}', 'ServiceController@callback');
 		//STREAM
 Route::post('/upload','StreamController@uploadPhoto')->name('uploadPhoto');
 

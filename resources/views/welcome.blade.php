@@ -17,6 +17,7 @@
   <img src="{{asset('Images/gamepad.png')}}" alt="logo" width="50" height="40">
      </div>
     <main id="login">
+
             <div class="container login-container">
                     <div class="row">
                         <div class="col-md-6 login-form-1">
@@ -32,8 +33,10 @@
                                 <div class="form-group">
                                     <input type="submit" class="btnSubmit" value="ავტორიზაცია" />
                                 </div>
+
                             </form>  
-                            
+<a href="{{ url('/auth/redirect/google') }}" style="color: white;"><img style="height: 30px" src="{{ asset('Images/google.png') }}"> Google</a>
+
                         </div>
                         <div class="col-md-6 login-form-2">
                             <div class="login-logo">
@@ -62,6 +65,7 @@
                         </div>
                     </div>
                 </div>
+                
     </main>
     
 </body>

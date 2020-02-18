@@ -7,6 +7,7 @@ use Input,Auth;
 use App\User;
 use App\Channel;
 use App\Donator;
+use App\Image;
 use App\Chat;
 use App\bannedUsers;
 
@@ -30,9 +31,14 @@ class StreamController extends Controller
             	$ch->twitchname = $request->input('twitchName');
             	$ch->about_stream = $request->input('desc');
             	$ch->save();
-                
-            	$id = Auth::user()->id;
-        		User::where('id',$id)->update(['streamer' => 1]);
+
+                $im = new Image;
+                $im->user_id = Auth::user()->id;
+                $im->my_picture = 1;
+                $im->profile_image = 'Images/man.png';
+                $im->save();
+
+        		User::where('id',Auth::user()->id)->update(['streamer' => 1]);
                 return \Redirect::to('/myStream');
 
     	return \Redirect::to('/myStream');
@@ -49,6 +55,7 @@ class StreamController extends Controller
                     ->get();
               
             $chan = Channel::select('channels.view','users.coin','channels.twitchname','channels.id AS chanId','users.id AS uId')->join('users','channels.userId','=','users.id')->where('users.id',$userId)->get();
+
             $chanId = $request->input('chanId');
             $donator = Donator::select('amount')->where('chanId',$chanId)->sum('amount');
             $topDonator = User::distinct()->select('name','chanId')->selectRaw('sum(amount) as total')->join('donators','donators.userId','=','users.id')->where('chanId',$chanId)->groupBy('users.id')->orderBy('total','DESC')->get();
@@ -72,7 +79,7 @@ class StreamController extends Controller
         ]);
 
         // $topDonator = Donator::selectRaw('distinct(channels.twitchname)','sum(amount) AS total')->where('chanId',$request->input('chanId'))->join('channels','channels.id','=','donators.chanId')->groupBy('chanId')->orderBy('userId','DESC')->get();
-        $topDonator = User::distinct()->select('users.name','users.id as userId','chanId')->selectRaw('sum(amount) as total')->join('donators','donators.userId','=','users.id')->where('chanId',$request->input('chanId'))->groupBy('users.id')->orderBy('total','DESC')->get();
+        $topDonator = User::distinct()->select('twitchname','users.name','users.id as userId','chanId')->selectRaw('sum(amount) as total')->join('channels','channels.userId','=','users.id')->join('donators','donators.userId','=','users.id')->where('chanId',$request->input('chanId'))->groupBy('users.id')->orderBy('total','DESC')->get();
 
        return view('anotherTopDonator',compact('topDonator'));
     }
@@ -110,7 +117,17 @@ class StreamController extends Controller
             $image = time().'.'.$request->file('image')->getClientOriginalExtension();
             $filePath = $request->image->move('public\uploadedImage',$image);
 
-            User::where('id',Auth::user()->id)->update(['image_picture' => $filePath]);
+            $checkImageName = Image::where('profile_image',$filePath)->count();
+            if ($checkImageName == 0) {
+                $makeProfile = Image::where('user_id',Auth::useR()->id)->where('my_picture',1)->update(['my_picture' => 0]);
+                if ($makeProfile) {
+                    $image = new Image;
+                    $image->user_id = Auth::user()->id;
+                    $image->my_picture = 1;
+                    $image->profile_image = $filePath;
+                    $image->save();
+                }
+            }
         }
         return redirect('myStream');
     }

@@ -18,12 +18,12 @@ class ChatController extends Controller
     {
             $this->validate($request,[
                 'chanId' => 'required|integer'
-                // 'dataId' => 'required|integer'
             ]);
-            $chat = Chat::select('chanId','chats.id as id','chats.userId','content','twitchname')->join('channels','channels.userId','=','chats.userId')->where('chats.chanId',$request->chanId)->orderBy('chats.id','desc')->get(); 
 
-            $chan = Channel::all();
-// return $chat;
+            $chat = Chat::select('channels.id as chanId','chats.id as id','chats.userId as user_id','content','twitchname')->join('channels','channels.userId','=','chats.userId')->where('chats.chanId',$request->input('chanId'))->orderBy('chats.id','desc')->get(); 
+
+            $chan = Channel::where('id',$request->input('chanId'))->get();
+
            return view('another',compact('chat','chan'));
     }
     public function recieve(Request $request)
@@ -33,7 +33,7 @@ class ChatController extends Controller
             'lastMsg' => 'required|numeric'
         ]);
 
-        $chat = Chat::select('chats.chanId','chats.id AS cId','chats.userId','users.id as uId','users.name','chats.content')->join('users','users.id','=','chats.userId')->where('chats.id','>',$request->input('lastMsg'))->get();
+        $chat = Chat::select('chats.chanId','chats.id AS cId','chats.userId','users.id as uId','users.name','chats.content')->join('users','users.id','=','chats.userId')->get();
         $chan = Channel::all();
 
         return view('calke',compact('chat','chan'));
@@ -57,7 +57,8 @@ class ChatController extends Controller
     {
         $this->validate($request,[
             'content' => 'required',
-            'chanId' => 'required',
+            'chanId' => 'required|integer',
+            'aUserId' => 'required|integer'
         ]);
 
         $chats = new Chat;
@@ -80,16 +81,8 @@ class ChatController extends Controller
 
                                 $donator = Donator::select('amount')->where('chanId',$chanId)->sum('amount');
                                 $topDonator = Donator::select('donators.userId','donators.chanId','amount','name')->join('users','users.id','=','donators.userId')->where('chanId',$chanId)->groupBy('users.name')->orderBy('amount','DESC')->get();
-                                // print_r($topDonator);
-                                // exit();
 
         }
-        // return response()->json([
-        //     'chat' => 'Success',
-        //     'donator' => 'Success Donator',
-        //     'topDonator' => 'Success TopDonator'
-        // ]);
-
             return view('anotherStream',compact('chat','chan','donator','topDonator'));
 
     }

@@ -16,6 +16,9 @@
 </head>
 <body>
     <style type="text/css">
+    img{
+        position: absolute;
+    }
         .logoLink:hover{
             opacity: 0.7;
         }
@@ -44,57 +47,64 @@
 
                 <h4>ტოპ 5 არხები</h4>
                 <hr>
-                <ul class="top-channels" style="margin-left: -10px;">
-                    @foreach (App\Channel::select('users.id AS uId','channels.id as chanId','channels.twitchname','channels.choosen_game','users.image_picture')->join('users','channels.userId','=','users.id')->orderBy('coins','desc')->take(5)->get() as $popularUsers)
+                <ul class="top-channels" style="margin-left: -10%;">
+                    @foreach (App\Channel::select('users.id AS uId','channels.id as chanId','channels.twitchname','channels.choosen_game')->join('users','channels.userId','=','users.id')->orderBy('coins','desc')->take(5)->get() as $popularUsers)
                     <form method="POST" action="{{ route('streamerGuy') }}">
                         {{ csrf_field() }}
                         <input type="hidden" value="{{$popularUsers->uId}}" name="userId">
                         <input type="hidden" name="chanId" value="{{$popularUsers->chanId}}">
                         <button style="background: #1d2329;border:none;">
                             <li style="display:block;"class='topChans'>
-                                @if ($popularUsers->image_picture == null)
-                                    <img src="{{asset('Images/man.png')}}" alt="avatar" width="30" height="30" style="display: inline-block;">
-                                @else
-                                    <img src="{{$popularUsers->image_picture}}"  alt="avatar" style="border-radius: 10px;" height="35" style="display: inline-block;">
-                                @endif
+                            @foreach (App\Image::where('user_id',$popularUsers->uId)->where('my_picture',1)->get() as $image)
+                                    @if ($image->user_id == \Auth::user()->id && $image->my_picture == 1)
+                                        <img src="{{$image->profile_image}}" alt="avatar" style="border-radius: 10px;border:solid 2px orange;" height="35" width="35" style="display: inline-block;">
+                                    @else
+                                        <img src="{{$image->profile_image}}" alt="avatar" style="border-radius: 10px;" height="35" width="35" style="display: inline-block;">
+                                    @endif
+                            @endforeach
+                            <div style="margin-top: -10%;margin-left: 105%;">
                                 <p style="display: inline-block;" class="twitchname">
                                     {{ $popularUsers->twitchname }}<code style="font-size:20px;">&trade;</code>
-
                                 </p>
+                            
                                 <span id="dot-on" style="display: inline-block;">
                                 </span>
                                 <p style="display: block;">
                                     {{ $popularUsers->choosen_game }}
                                 </p>
+                            </div>
                             </li>
                             </button>
                             </form>
+
                             <hr>
                     @endforeach
                     
                 </ul>
                 <h4>არხები</h4>
                 <hr>
-                <ul class="top-channels" style="margin-left: -10px;">
-@foreach (App\Channel::select('channels.id as chanId','users.id','channels.twitchname','channels.choosen_game','image_picture')->join('users','channels.userId','=','users.id')->get() as $chans)
+                <ul class="top-channels" style="margin-left: -10%;">
+@foreach (App\Channel::select('channels.id as chanId','users.id as userId','channels.twitchname','channels.choosen_game')->join('users','channels.userId','=','users.id')->get() as $chans)
 @if (\Auth::user()->id != $chans->uId)
     <form method="POST" action="{{ route('streamerGuy') }}">
                 {{csrf_field()}}
-            <input type="hidden" value="{{ $chans->id }}" name="userId">
+            <input type="hidden" value="{{ $chans->userId }}" name="userId">
             <input type="hidden" name="chanId" value="{{$chans->chanId}}">
             <button style="background: #1d2329;border:none;">
       
                         <li style="display: block;" class="topChans">
-
-                            @if ($chans->image_picture == null)
-                                <img src="{{asset('Images/man.png')}}" alt="avatar" width="30" height="30" style="display: inline-block;">
-                            @else
-                                <img src="{{$chans->image_picture}}" alt="avatar" style="border-radius: 10px;" height="35" style="display: inline-block;">
-                            @endif
-
+                        @foreach (App\Image::where('user_id',$chans->userId)->where('my_picture',1)->get() as $image)
+                                 @if ($image->user_id == \Auth::user()->id)
+                                        <img src="{{$image->profile_image}}" alt="avatar" style="border-radius: 10px;border:solid 2px orange;" height="35" width="35" style="display: inline-block;">
+                                    @else
+                                        <img src="{{$image->profile_image}}" alt="avatar" style="border-radius: 10px;" height="35" width="35" style="display: inline-block;">
+                                    @endif
+                        @endforeach
+                        <div style="margin-top: -10%;margin-left: 115%;">
                             <p style="display: inline-block;" >
                                 {{ $chans->twitchname }} 
                             </p>
+
                              {{--  @if (date('g', strtotime($chans->last_activity)) > date('g')-1)
                                 <span id="dot-on" style="display: inline-block;">
                               @else
@@ -104,6 +114,7 @@
                             <p style="display: block;">
                                 {{$chans->choosen_game}}
                             </p>
+                        </div>
                         </li>
                        
             </button>
@@ -114,31 +125,32 @@
                     </ul>
         </div>
 <nav id="nav">
-        <div id="logo" style="display: inline-block;">
-<a href="{{ route('home') }}" class="logoLink">
-  <img src="{{ asset('Images/gamepad.png') }}" width="55px;" height="45px;" style="margin-top: 0%;" alt="logo" >
-</a>
-        </div>
+{{-- WEBSITE LOGO START --}}
+    <div id="logo" style="display: inline-block;">
+        <a href="{{ route('home') }}" class="logoLink">
+          <img src="{{ asset('Images/gamepad.png') }}" width="55px;" height="45px;" style="margin-top: 0%;" alt="logo" >
+        </a>
+    </div>
+{{-- WEBSITE LOGO END --}}
         <div class="coins" id="myCoinOutput" style="display: inline-block;margin-top: 25px">
             <a href="{{ route('coinBuy') }}" class="ahrefCoin"> 
             <p style="display: inline-block;" >რაოდენობა: {{\Auth::user()->coin}}<p style="display: inline-block;">
              <img src="{{ asset('Images/coins.png')}}" alt="coing" width="30" height="30" style="display: inline-block; margin-left: 10px;">
               </a>
         </div>
-
+{{-- PROFILE PICTURE START --}}
         <div class="saxeli-gvari" style="display: inline-block;">
            <a href="{{ route('mS') }}">
-            @if (\Auth::user()->image_picture == NULL)
-                <img style="display: inline-block;" class="rounded-circle" src="{{ asset('Images/man.png') }}"  width="42" height="42">
-            @else
-            <picture>
-                <img class="rounded-circle" src="{{ \Auth::user()->image_picture }}"  width="30" >
-            </picture>
-                
-            @endif  
+                @foreach (App\Image::where('user_id',Auth::user()->id)->where('my_picture',1)->get() as $images)
+                    <picture>
+                        <img class="rounded-circle" src="{{$images->profile_image}}" height="30"  width="30" >
+                    </picture>
+                @endforeach        
+ 
                 <p style="display: inline-block;">{{\Auth::user()->name}}</p>
             </a>
         </div>
+{{-- PROFILE PICTURE END --}}
 <div style="display: inline-block;" class="logout">
             <form method="POST" action="{{ route('logout') }}">
                 {{ csrf_field() }}
